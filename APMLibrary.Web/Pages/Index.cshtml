@@ -1,0 +1,43 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Главная";
+}
+
+@section Supports {
+    <li class="nav-item">
+        <a href="#" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
+        </li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
+}
+
+<div class="row mx-3 p-3" style="overflow-x: auto">
+    <ul class="nav nav-pills text-nowrap flex-nowrap">
+        <li class="nav-item px-2">
+            <a class="btn custom-btn-white text-dark" href="#">
+                <i class="bi bi-book-half mx-2"></i>
+                <span class="mx-2">Книги</span>
+            </a>
+        </li>
+        <li class="nav-item px-2">
+            <a class="btn custom-btn-white text-dark" href="#">
+                <i class="bi bi-stack mx-2"></i>
+                <span class="mx-2">Новинки</span>
+            </a>
+        </li>
+        <li class="nav-item px-2">
+            <a class="btn custom-btn-white text-dark" href="#">
+                <i class="bi bi-fire mx-2"></i>
+                <span class="mx-2">Топ книг</span>
+            </a>
+        </li>
+        <li class="nav-item px-2">
+            <a class="btn custom-btn-white text-dark" href="#">
+                <i class=" bi bi-bookmark-check mx-2"></i>
+                <span class="mx-2">Бесплатные книги</span>
+            </a>
+        </li>
+    </ul>
+</div>

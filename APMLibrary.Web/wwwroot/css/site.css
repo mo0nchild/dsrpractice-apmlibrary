@@ -1,0 +1,59 @@
+/*@import url('https://fonts.googleapis.com/css2?family=Agdasima&display=swap');*/
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+header {
+    
+}
+
+.custom-btn-white {
+    background-color: #FFF;
+    border-color: #000;
+    border: 1px solid;
+    border-radius: 5px;
+
+    box-shadow: 0px 0px 6px #CCC;
+}
+
+body {
+    --main-color: #ffef73;
+    --secondary-color: #ffda61;
+    --main-text-color: #EA2B1F;
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    background-color: #F6F6F6;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: #F6F6F6;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 1px #AAA;
+    border-radius: 4px;
+    background-color: #FAFAFA;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 1px #AAA;
+    border-radius: 4px;
+    background-color: #444;
+}

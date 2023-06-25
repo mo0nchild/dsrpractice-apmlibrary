@@ -1,0 +1,91 @@
+version: '3.4'
+
+name: 'apmlibrary'
+
+services:
+  apmlibraryclient:
+    container_name: 'apmlibraryclient'
+
+    image: 'mo0nchild/apmlibraryclient:dev'
+    build:
+      context: .
+      dockerfile: APMLibrary.Web/Dockerfile
+
+    environment:
+      DATABASE_STRING: 'Host=apmlibrarydb;Port=5432;Database=librarydb;Username=root;Password=root'
+
+    networks:
+      - apmlibrarynetwork
+
+    restart: on-failure:5
+
+    deploy:
+      restart_policy:
+        max_attempts: 5
+        delay: 2s
+        condition: on-failure
+        
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+    ports:
+      - '8080:80'
+  
+  apmlibrarydb:
+    image: postgres:latest
+
+    container_name: 'apmlibrarydb'
+
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    
+    environment:
+    
+      POSTGRES_USER: 'root'
+      POSTGRES_PASSWORD: 'root'
+      POSTGRES_DB: 'librarydb'
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+
+    volumes:
+      - ./librarydb:/var/lib/postgresql/data
+    
+    ports:
+      - '5433:5432'
+    networks:
+      - apmlibrarynetwork
+
+  pgadmin:
+    container_name: 'pgadminaccess'
+    image: dpage/pgadmin4:latest
+
+    restart: always
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - '5050:80'
+    networks:
+      - apmlibrarynetwork
+
+    volumes:
+      - './pgadmin:/var/lib/pgadmin'
+
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512G
+    
+networks:
+  apmlibrarynetwork:
+    driver: bridge
+
+

@@ -1,0 +1,34 @@
+﻿using APMLibraryDAL.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace APMLibrary.Dal.Configurations
+{
+    internal sealed class PublicationConfiguration : IEntityTypeConfiguration<Publication>
+    {
+        public void Configure(EntityTypeBuilder<Publication> builder)
+        {
+            builder.HasKey(item => item.Id);
+            builder.HasIndex(item => item.Id).IsUnique();
+
+            builder.Property(item => item.VendorCode).HasMaxLength(13);
+            builder.Property(item => item.Name).HasMaxLength(100);
+            builder.Property(item => item.Description).HasColumnType("text");
+
+            builder.HasOne(item => item.Language).WithMany(item => item.Publications)
+                .HasForeignKey(item => item.LanguageId).HasPrincipalKey(item => item.Id);
+            builder.HasOne(item => item.BookCover).WithMany(item => item.Publications)
+                .HasForeignKey(item => item.BookCoverId).HasPrincipalKey(item => item.Id);
+
+            builder.HasOne(item => item.Author).WithMany(item => item.Publications)
+                .HasForeignKey(item => item.AuthorId).HasPrincipalKey(item => item.Id);
+            builder.HasOne(item => item.PublicationType).WithMany(item => item.Publications)
+                .HasForeignKey(item => item.PublicationTypeId).HasPrincipalKey(item => item.Id);
+        }
+    }
+}
