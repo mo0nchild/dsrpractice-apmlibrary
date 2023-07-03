@@ -49,8 +49,9 @@ namespace APMLibrary.Web.Pages.ProfilePages
                 new Claim(ClaimTypes.IsPersistent, this.AuthorizationModel.RememberMe.ToString())
 
             }, CookieAuthenticationDefaults.AuthenticationScheme);
-
             await this.HttpContext.SignInAsync(new ClaimsPrincipal(profileIdentity));
+
+            this.HttpContext.Session.SetString("RememberMe", "");
             return this.RedirectToPage("/ProfilePages/ProfileInfo");
         }
     }

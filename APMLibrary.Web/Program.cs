@@ -44,9 +44,9 @@ namespace APMLibrary.Web
                 application.UseHsts();
             }
             application.UseHttpsRedirection().UseStaticFiles().UseSession();
-            application.UseProfileMiddleware(options => options.RememberCookieName = "RememberMe");
-
             application.UseRouting().UseAuthentication().UseAuthorization();
+            
+            application.UseProfileMiddleware(options => options.RememberCookieName = "RememberMe");
             application.MapRazorPages();
             application.MapControllers();
 

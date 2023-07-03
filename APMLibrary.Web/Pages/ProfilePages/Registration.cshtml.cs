@@ -54,6 +54,7 @@ namespace APMLibrary.Web.Pages.ProfilePages
                 this.ModelState.AddModelError("Login", requestError.Message);
                 return this.Page();
             }
+            this.HttpContext.Session.SetString("RememberMe", "");
             return this.RedirectToPage("/ProfilePages/ProfileInfo");
         }
     }
