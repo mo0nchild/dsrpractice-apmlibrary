@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APMLibrary.Dal", "APMLibrar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APMLibrary.Tests", "APMLibrary.Tests\APMLibrary.Tests.csproj", "{DB9EA57E-7634-49CD-8CD3-FAF937C19475}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APMLibrary.Bll", "..\APMLibrary.Bll\APMLibrary.Bll.csproj", "{D3825B79-6415-4C17-98FF-089B99A837F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APMLibrary.Bll", "APMLibrary.Bll\APMLibrary.Bll.csproj", "{D3825B79-6415-4C17-98FF-089B99A837F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
