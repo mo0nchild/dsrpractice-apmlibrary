@@ -25,8 +25,6 @@ namespace APMLibrary.Web.Middlewares
         {
             if (context.User.Identity != null && context.User.Identity.IsAuthenticated)
             {
-                Console.WriteLine("\nasdasdasdasd\n");
-
                 var rememberStatus = context.User.FindFirst(ClaimTypes.IsPersistent);
                 if (rememberStatus != null && bool.TryParse(rememberStatus.Value, out var status) && !status)
                 {
