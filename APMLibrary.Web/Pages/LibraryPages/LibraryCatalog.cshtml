@@ -1,0 +1,125 @@
+﻿@page "/catalog"
+@using APMLibrary.Web.ViewComponents;
+@model APMLibrary.Web.Pages.LibraryPages.LibraryCatalogModel
+@{
+    this.ViewData["Title"] = "Библиотека";
+}
+@section Supports {
+    <li class="nav-item">
+        <a href="#" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
+    </li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Библитека", null }
+    });
+}
+
+<div class="row w-100 mb-2">
+    <h1 class="fs-2 fw-bolder mb-3">Библиотека публикаций</h1>
+</div>
+
+<div class="row w-100 mb-5 g-lg-4">
+
+    <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+        <div class="bg-white custom-bg-white p-3">
+
+            <h2 class="fs-5 fw-bolder mb-4">Категории и жанры</h2>
+            @{
+                var categories = new Dictionary<string, List<string>>()
+                {
+                    { "Категория 1", new () { "Жанр 1", "Жанр 2", "Жанр 3" } }, 
+                    { "Категория 2", new () { "Жанр 4", "Жанр 5", "Жанр 6" } }, 
+                    { "Категория 3", new () { "Жанр 7", "Жанр 8", "Жанр 9" } },
+                    { "Категория 4", new () { "Жанр 10", "Жанр 11", "Жанр 12" } },
+                    { "Категория 5", new () { "Жанр 13", "Жанр 14", "Жанр 15" } }, 
+                    { "Категория 6", new () { "Жанр 16", "Жанр 17", "Жанр 18" } }, 
+                    { "Категория 7", new () { "Жанр 19", "Жанр 20", "Жанр 21" } },
+                };
+            }
+            @{
+                void RenderCategoryTreeview()
+                {
+                    <ul class="list-group list-group-flush px-2" style="overflow-y: auto; height: 250px;">
+                        
+                        @for(var index = 0; index < categories.Count; index++)
+                        {
+                            var item = categories.ElementAt(index);
+                            <li class="list-group-item p-0 my-1" style="border-bottom: 1px solid #212529">
+                                <button class="btn btn-outline-dark w-100 border-0 border-bottom-1" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="@($"#collapseGenre{index}")">
+                                    @item.Key
+                                </button>
+                                <div class="collapse" id="@($"collapseGenre{index}")">
+                                    <div class="card card-body m-3 overflow-auto p-1">
+                                       <ul class="list-group list-group-flush">
+                                            @foreach(var prop in item.Value) 
+                                            {
+                                                <li class="list-group-item">
+                                                    <a class="text-decoration-none" href="#">@prop</a>
+                                                </li> 
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+            <div class="d-block d-lg-none">
+                <button class="btn btn-outline-dark w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory">
+                    Отобразить список
+                </button>
+                <div class="collapse" id="collapseCategory">
+                    @{ RenderCategoryTreeview(); }
+                </div>
+            </div>
+
+            <div class="d-none d-lg-block">
+                @{ RenderCategoryTreeview(); }
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-8">
+        
+        <div class="row mb-4">
+            <div class="col-12">
+                @await this.Component.InvokeAsync(typeof(CatalogViewComponent), new { title = "Все книги",
+                href = this.Url.PageLink("/LibraryPages/ListCatalog") })
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                @await this.Component.InvokeAsync(typeof(CatalogViewComponent), new { title = "Авторы" })
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#left-scroll-btn').on('click', function () {
+                $('#container-scroll').animate({ scrollLeft: '-=200' }, 400);
+            });
+
+            $('#right-scroll-btn').click(function () {
+                $('#container-scroll').animate({ scrollLeft: '+=200' }, 400);
+            });
+        });
+
+    </script>
+
+}

@@ -9,7 +9,9 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APMLibrary.Dal", "APMLibrary.Dal\APMLibrary.Dal.csproj", "{F5D4B3B7-7B61-4532-A51C-F009E6B2BA06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APMLibrary.Tests", "APMLibrary.Tests\APMLibrary.Tests.csproj", "{DB9EA57E-7634-49CD-8CD3-FAF937C19475}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APMLibrary.Tests", "APMLibrary.Tests\APMLibrary.Tests.csproj", "{DB9EA57E-7634-49CD-8CD3-FAF937C19475}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APMLibrary.Bll", "..\APMLibrary.Bll\APMLibrary.Bll.csproj", "{D3825B79-6415-4C17-98FF-089B99A837F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DB9EA57E-7634-49CD-8CD3-FAF937C19475}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB9EA57E-7634-49CD-8CD3-FAF937C19475}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB9EA57E-7634-49CD-8CD3-FAF937C19475}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3825B79-6415-4C17-98FF-089B99A837F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3825B79-6415-4C17-98FF-089B99A837F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3825B79-6415-4C17-98FF-089B99A837F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3825B79-6415-4C17-98FF-089B99A837F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

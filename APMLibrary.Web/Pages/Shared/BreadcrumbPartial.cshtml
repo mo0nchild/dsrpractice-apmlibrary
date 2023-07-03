@@ -1,0 +1,22 @@
+﻿@model Dictionary<string, string?>
+@{
+}
+<div class="row w-100 mb-2">
+
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            
+            @foreach (var item in this.Model)
+            {
+                if (item.Value == null)
+                {
+                    <li class="breadcrumb-item active" aria-current="page">@item.Key</li>
+                }
+                else
+                {
+                    <li class="breadcrumb-item"><a asp-page="@item.Value" style="text-decoration: none;">@item.Key</a></li>
+                }
+            }
+        </ol>
+    </nav>
+</div>

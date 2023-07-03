@@ -1,0 +1,37 @@
+﻿@model APMLibrary.Web.ViewModels.ProfileNavViewModel
+@{
+}
+@*this.User.Identity != null && this.User.Identity.IsAuthenticated*@
+@if (this.Model != null)
+{
+    @*var imageUrl = (this.Model.Image == null ? "/img/noprofileimage.png" 
+        : $"data:image;base64,{Convert.ToBase64String(this.Model.Image)}");*@
+    var imageUrl = "/img/noprofileimage.png";
+
+    <div class="dropdown">
+
+        <button type="button" class="btn border-0 p-0 px-2 btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown">
+
+            <img src="@imageUrl" alt="..." class="border border-secondary"
+                 style="width: 40px; height: 40px; border-radius: 10px; object-fit: contain;" />
+
+        </button>
+
+        <ul class="dropdown-menu mt-2 p-2" style="max-width: 200px;">
+            <li>
+                <span class="dropdown-item disabled overflow-hidden"> @this.Model.Name&nbsp;@this.Model.Surname </span>
+            </li>
+            <li><a class="dropdown-item" asp-page="/ProfilePages/ProfileInfo">Настройки профиля</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" asp-route="logout">Выйти из профиля</a></li>
+        </ul>
+
+    </div>
+}
+else
+{
+    <div class="">
+        <a asp-page="/ProfilePages/Login" class="btn btn-outline-dark me-2">Войти</a>
+        <a asp-page="/ProfilePages/Registration" class="btn btn-dark">Регистрация</a>
+    </div>
+}

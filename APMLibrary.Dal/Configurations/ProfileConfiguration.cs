@@ -1,4 +1,4 @@
-﻿using APMLibraryDAL.Models;
+﻿using APMLibrary.Dal.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -19,10 +19,12 @@ namespace APMLibrary.Dal.Configurations
 
             builder.Property(item => item.Name).HasMaxLength(50);
             builder.Property(item => item.Surname).HasMaxLength(50);
-            builder.Property(item => item.Patronymic).HasMaxLength(50);
 
             builder.Property(item => item.Email).HasMaxLength(100);
             builder.Property(item => item.Name).HasMaxLength(50);
+
+            builder.HasMany(item => item.Bookmarks).WithMany(item => item.Readers)
+                .UsingEntity("Bookmarks");
         }
     }
 }

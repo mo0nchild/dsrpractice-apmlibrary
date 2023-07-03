@@ -1,0 +1,74 @@
+﻿@using APMLibrary.Web.ViewModels;
+@model APMLibrary.Web.ViewModels.FilterViewModel
+@{
+    var filterSubscribe = new List<SelectListItem>()
+    {
+        new ("Без подписки", false.ToString()), new ("Для подписчиков", true.ToString()),
+    };
+    var filterLanguage = new SelectList(this.ViewBag.Languages);
+    async Task RenderFilterContainer()
+    {
+        <form id="filter-form" method="get" asp-page="@this.ViewBag.Page" asp-page-handler="@(this.ViewBag.Handler)">
+
+            <input type="hidden" asp-for="@this.Model.SearchingText" />
+            <div class="row mb-4">
+
+                <div class="col-12">
+                    <label class="form-label">Статус подписки:</label>
+
+                    <select class="form-select" asp-for="@this.Model.ForSubscriber" asp-items="filterSubscribe">
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="row mb-4">
+
+                <div class="col-12">
+                    <label class="form-label">Сортировать:</label>
+                    <select class="form-select" asp-for="@this.Model.OrderType" asp-items="@this.Html.GetEnumSelectList<OrderType>()">
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="row mb-4">
+
+                <div class="col-12">
+                    <label class="form-label">Язык текста:</label>
+                    <select class="form-select" asp-for="@this.Model.Language" asp-items="@filterLanguage">
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="row mb-4">
+
+                <div class="col-12">
+                    <input class="btn btn-dark w-100" type="submit" value="Применить фильтры" />
+                </div>
+
+            </div>
+            
+        </form>
+    }
+}
+<div class="bg-white custom-bg-white p-3">
+    <h2 class="fs-5 fw-bolder mb-4">Фильтры поиска</h2>
+    <div class="d-block d-lg-none">
+        <button class="btn btn-outline-dark w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory">
+            Отобразить список
+        </button>
+        <div class="collapse" id="collapseCategory">
+            @{
+                await RenderFilterContainer();
+            }
+        </div>
+    </div>
+
+    <div class="d-none d-lg-block">
+        @{
+            await RenderFilterContainer();
+        }
+    </div>
+</div>

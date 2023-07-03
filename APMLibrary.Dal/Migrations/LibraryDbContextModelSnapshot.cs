@@ -22,31 +22,7 @@ namespace APMLibrary.Dal.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Author", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("Reference")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("ProfileId");
-
-                    b.ToTable("Authors");
-                });
-
-            modelBuilder.Entity("APMLibraryDAL.Models.Authorization", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Authorization", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,7 +60,7 @@ namespace APMLibrary.Dal.Migrations
                     b.ToTable("Authorizations");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.BookCover", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.BookCover", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,7 +79,7 @@ namespace APMLibrary.Dal.Migrations
                     b.ToTable("BookCovers");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Category", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,7 +97,7 @@ namespace APMLibrary.Dal.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Genre", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Genre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -147,7 +123,7 @@ namespace APMLibrary.Dal.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Language", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Language", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,7 +141,7 @@ namespace APMLibrary.Dal.Migrations
                     b.ToTable("Languages");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Profile", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Profile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -192,6 +168,12 @@ namespace APMLibrary.Dal.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("Reference")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Subscriber")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -208,7 +190,7 @@ namespace APMLibrary.Dal.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Publication", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Publication", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -216,8 +198,10 @@ namespace APMLibrary.Dal.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("integer");
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<byte[]>("Body")
                         .IsRequired()
@@ -235,11 +219,6 @@ namespace APMLibrary.Dal.Migrations
                     b.Property<int>("LanguageId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<int>("NumberPages")
                         .HasColumnType("integer");
 
@@ -248,6 +227,14 @@ namespace APMLibrary.Dal.Migrations
 
                     b.Property<bool>("Published")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("PublisherId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("VendorCode")
                         .IsRequired()
@@ -259,8 +246,6 @@ namespace APMLibrary.Dal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
-
                     b.HasIndex("BookCoverId");
 
                     b.HasIndex("Id")
@@ -270,10 +255,12 @@ namespace APMLibrary.Dal.Migrations
 
                     b.HasIndex("PublicationTypeId");
 
+                    b.HasIndex("PublisherId");
+
                     b.ToTable("Publications");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.PublicationType", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.PublicationType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -291,7 +278,7 @@ namespace APMLibrary.Dal.Migrations
                     b.ToTable("PublicationTypes");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Quote", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Quote", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -324,7 +311,7 @@ namespace APMLibrary.Dal.Migrations
                     b.ToTable("Quotes");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Rating", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Rating", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -362,42 +349,15 @@ namespace APMLibrary.Dal.Migrations
                         });
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Reader", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("Reference")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("Subscriber")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("ProfileId");
-
-                    b.ToTable("Readers");
-                });
-
             modelBuilder.Entity("Bookmarks", b =>
                 {
-                    b.Property<int>("PublicationsId")
+                    b.Property<int>("BookmarksId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ReadersId")
                         .HasColumnType("integer");
 
-                    b.HasKey("PublicationsId", "ReadersId");
+                    b.HasKey("BookmarksId", "ReadersId");
 
                     b.HasIndex("ReadersId");
 
@@ -419,31 +379,20 @@ namespace APMLibrary.Dal.Migrations
                     b.ToTable("GenrePublication");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Author", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Authorization", b =>
                 {
-                    b.HasOne("APMLibraryDAL.Models.Profile", "Profile")
-                        .WithMany("Authors")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Profile");
-                });
-
-            modelBuilder.Entity("APMLibraryDAL.Models.Authorization", b =>
-                {
-                    b.HasOne("APMLibraryDAL.Models.Profile", "Profile")
+                    b.HasOne("APMLibraryDAL.Entities.Profile", "Profile")
                         .WithOne("Authorization")
-                        .HasForeignKey("APMLibraryDAL.Models.Authorization", "ProfileId")
+                        .HasForeignKey("APMLibraryDAL.Entities.Authorization", "ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Genre", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Genre", b =>
                 {
-                    b.HasOne("APMLibraryDAL.Models.Category", "Category")
+                    b.HasOne("APMLibraryDAL.Entities.Category", "Category")
                         .WithMany("Genres")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -452,50 +401,50 @@ namespace APMLibrary.Dal.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Publication", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Publication", b =>
                 {
-                    b.HasOne("APMLibraryDAL.Models.Author", "Author")
-                        .WithMany("Publications")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("APMLibraryDAL.Models.BookCover", "BookCover")
+                    b.HasOne("APMLibraryDAL.Entities.BookCover", "BookCover")
                         .WithMany("Publications")
                         .HasForeignKey("BookCoverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APMLibraryDAL.Models.Language", "Language")
+                    b.HasOne("APMLibraryDAL.Entities.Language", "Language")
                         .WithMany("Publications")
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APMLibraryDAL.Models.PublicationType", "PublicationType")
+                    b.HasOne("APMLibraryDAL.Entities.PublicationType", "PublicationType")
                         .WithMany("Publications")
                         .HasForeignKey("PublicationTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Author");
+                    b.HasOne("APMLibraryDAL.Entities.Profile", "Publisher")
+                        .WithMany("Publications")
+                        .HasForeignKey("PublisherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BookCover");
 
                     b.Navigation("Language");
 
                     b.Navigation("PublicationType");
+
+                    b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Quote", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Quote", b =>
                 {
-                    b.HasOne("APMLibraryDAL.Models.Publication", "Publication")
+                    b.HasOne("APMLibraryDAL.Entities.Publication", "Publication")
                         .WithMany("Quotes")
                         .HasForeignKey("PublicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APMLibraryDAL.Models.Reader", "Reader")
+                    b.HasOne("APMLibraryDAL.Entities.Profile", "Reader")
                         .WithMany("Quotes")
                         .HasForeignKey("ReaderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -506,15 +455,15 @@ namespace APMLibrary.Dal.Migrations
                     b.Navigation("Reader");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Rating", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Rating", b =>
                 {
-                    b.HasOne("APMLibraryDAL.Models.Publication", "Publication")
+                    b.HasOne("APMLibraryDAL.Entities.Publication", "Publication")
                         .WithMany("Ratings")
                         .HasForeignKey("PublicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APMLibraryDAL.Models.Reader", "Reader")
+                    b.HasOne("APMLibraryDAL.Entities.Profile", "Reader")
                         .WithMany("Ratings")
                         .HasForeignKey("ReaderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -523,28 +472,17 @@ namespace APMLibrary.Dal.Migrations
                     b.Navigation("Publication");
 
                     b.Navigation("Reader");
-                });
-
-            modelBuilder.Entity("APMLibraryDAL.Models.Reader", b =>
-                {
-                    b.HasOne("APMLibraryDAL.Models.Profile", "Profile")
-                        .WithMany("Readers")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("Bookmarks", b =>
                 {
-                    b.HasOne("APMLibraryDAL.Models.Publication", null)
+                    b.HasOne("APMLibraryDAL.Entities.Publication", null)
                         .WithMany()
-                        .HasForeignKey("PublicationsId")
+                        .HasForeignKey("BookmarksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APMLibraryDAL.Models.Reader", null)
+                    b.HasOne("APMLibraryDAL.Entities.Profile", null)
                         .WithMany()
                         .HasForeignKey("ReadersId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -553,66 +491,56 @@ namespace APMLibrary.Dal.Migrations
 
             modelBuilder.Entity("GenrePublication", b =>
                 {
-                    b.HasOne("APMLibraryDAL.Models.Genre", null)
+                    b.HasOne("APMLibraryDAL.Entities.Genre", null)
                         .WithMany()
                         .HasForeignKey("GenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APMLibraryDAL.Models.Publication", null)
+                    b.HasOne("APMLibraryDAL.Entities.Publication", null)
                         .WithMany()
                         .HasForeignKey("PublicationsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Author", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.BookCover", b =>
                 {
                     b.Navigation("Publications");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.BookCover", b =>
-                {
-                    b.Navigation("Publications");
-                });
-
-            modelBuilder.Entity("APMLibraryDAL.Models.Category", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Category", b =>
                 {
                     b.Navigation("Genres");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Language", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Language", b =>
                 {
                     b.Navigation("Publications");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Profile", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Profile", b =>
                 {
                     b.Navigation("Authorization")
                         .IsRequired();
 
-                    b.Navigation("Authors");
+                    b.Navigation("Publications");
 
-                    b.Navigation("Readers");
+                    b.Navigation("Quotes");
+
+                    b.Navigation("Ratings");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.Publication", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.Publication", b =>
                 {
                     b.Navigation("Quotes");
 
                     b.Navigation("Ratings");
                 });
 
-            modelBuilder.Entity("APMLibraryDAL.Models.PublicationType", b =>
+            modelBuilder.Entity("APMLibraryDAL.Entities.PublicationType", b =>
                 {
                     b.Navigation("Publications");
-                });
-
-            modelBuilder.Entity("APMLibraryDAL.Models.Reader", b =>
-                {
-                    b.Navigation("Quotes");
-
-                    b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618
         }

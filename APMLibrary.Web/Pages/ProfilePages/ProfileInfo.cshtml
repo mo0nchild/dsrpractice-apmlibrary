@@ -1,0 +1,23 @@
+﻿@page "/profile/info"
+@model APMLibrary.Web.Pages.ProfilePages.ProfileInfoModel
+@{
+    this.ViewData["Title"] = "Настройка профиля";
+}
+@section Supports {
+    <li class="nav-item">
+        <a href="#" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
+    </li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Профиль", null }
+    });
+}
+<div class="row w-100 mb-5 justify-content-center">
+
+</div>

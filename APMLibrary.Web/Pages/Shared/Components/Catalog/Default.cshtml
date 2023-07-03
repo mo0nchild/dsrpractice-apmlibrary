@@ -1,0 +1,49 @@
+﻿@model APMLibrary.Web.ViewModels.BookCatalogViewModel
+@{
+}
+<div class="bg-white custom-bg-white p-3">
+    <div class="row mb-2 pb-2 border-1 border-bottom">
+        <div class="d-flex flex-row justify-content-between">
+
+            <div class="">
+                <h2 class="fs-5 mb-1 fw-bolder">@this.ViewBag.CatalogTitle</h2>
+                <p class="m-0" style="font-size: 14px;">@this.Model.AllCount публикаций</p>
+            </div>
+
+            <a href="@this.ViewBag.RedirectLink" class="text-decoration-none">Показать все&nbsp;<i class="bi bi-arrow-right-circle"></i></a>
+        </div>
+    </div>
+
+    <div class="row flex-nowrap mb-2 px-2">
+        <div id="container-scroll" class="d-flex flex-row flex-nowrap p-2" style="overflow-x: auto;">
+            @foreach (var item in this.Model.Items)
+            {
+                var imageUrl = (item.Image == null ? "/img/nobookcover.png" : $"data:image;base64,{Convert.ToBase64String(item.Image)}");
+                <a href="#" class="card mx-2 text-decoration-none flex-shrink-0" style="width: 10rem; color: #000;">
+                    <img src="@imageUrl" class="card-img-top card-img-catalog" alt="...">
+
+                    <div class="card-body py-2">
+                        @if(item.Rating != null)
+                        {
+                            <div class="">
+                                @for (var count = 0; count < 5; count++)
+                                {
+                                    <span class="fa fa-star @((item.Rating < count + 1) ? "" : "checked-star")"></span>
+                                }
+                            </div>
+                        }
+                        <p class="card-text m-0 overflow-hidden text-nowrap" style="font-size: 16px;">@item.FirstLine</p>
+                        <p class="card-text text-secondary overflow-hidden text-nowrap" style="font-size: 14px;">@item.LastLine</p>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+    <div class="d-flex flex-row justify-content-between px-2">
+
+        <button id="left-scroll-btn" class="btn border-1 border-secondary"> <i class="bi bi-arrow-bar-left"></i> </button>
+        <button id="right-scroll-btn" class="btn border-1 border-secondary"> <i class="bi bi-arrow-bar-right"></i> </button>
+
+    </div>
+
+</div>

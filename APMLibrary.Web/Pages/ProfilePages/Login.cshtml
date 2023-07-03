@@ -1,0 +1,95 @@
+﻿@page "/profile/login"
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
+@model APMLibrary.Web.Pages.ProfilePages.LoginModel
+@{
+    this.ViewData["Title"] = "Войти в профиль";
+    bool CheckValidation(string name) => this.ModelState[name] == null
+        || this.ModelState[name]?.ValidationState == ModelValidationState.Valid;
+}
+@section Supports {
+    <li class="nav-item">
+        <a href="#" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
+    </li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Профиль", null }, { "Войти в профиль", null }
+    });
+}
+<div class="row w-100 mb-5 justify-content-center">
+    @if (!this.ModelState.IsValid)
+    {
+        await this.Html.RenderPartialAsync("AlertPartial", "Неверно введены данные для входа в профиль");
+    }
+    <div class="col-12 col-md-8 col-lg-6 bg-white custom-bg-white p-5 " style="border-radius: 10px;">
+
+        <h1 class="fs-2 fw-bolder mb-5">Войти в профиль</h1>
+        
+        <form class="needs-validation" method="post" asp-page="Login" enctype="multipart/form-data" asp-antiforgery="true">
+
+            <div class="row mb-4">
+                <div class="col-12">
+                    <label class="form-label">Логин профиля:</label>
+                    <input asp-for="AuthorizationModel.Login" class="form-control @(CheckValidation("AuthorizationModel.Login") ? "" : "is-invalid")"
+                           type="text" maxlength="50" placeholder="Введите логин профиля" required>
+
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="AuthorizationModel.Login"></span>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-12">
+                    <label class="form-label">Пароль профиля:</label>
+                    <div class="input-group has-validation">
+                        <input id="password" asp-for="AuthorizationModel.Password" class="form-control @(CheckValidation("AuthorizationModel.Password") ? "" : "is-invalid")"
+                               type="password" maxlength="50" placeholder="Введите пароль профиля" required>
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon">
+                            <i id="password-icon" class="bi bi-eye-slash-fill"></i>
+                        </button>
+                    </div>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="AuthorizationModel.Password"></span>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="AuthorizationModel.RememberMe" />
+                        <label class="form-check-label"> Запомнить настройки для входа</label>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <span>У вас нет профиля?&nbsp;<a class="text-decoration-none" asp-page="Registration">Регистрация</a></span>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <input class="btn btn-primary mb-3 col-12 col-md-8" type="submit" value="Войти в профиль" />
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script id="password-hideshow" type="text/javascript">
+        $(this.document).ready(function () {
+            var changeClass = (added, deleted) => {
+                $('#password-icon').addClass(added); $('#password-icon').removeClass(deleted);
+            };
+            var isPasswordHide = false;
+            $('#button-addon').click(function () {
+                if (isPasswordHide == false) {
+                    $('#password').attr('type', 'text'); changeClass('bi-eye-fill', 'bi-eye-slash-fill');
+                }
+                else { $('#password').attr('type', 'password'); changeClass('bi-eye-slash-fill', 'bi-eye-fill'); }
+                isPasswordHide = !isPasswordHide;
+            });
+        });
+        $(window).on('load', () => $('#myModal').modal('show'));
+    </script>
+}

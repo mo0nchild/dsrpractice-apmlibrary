@@ -1,0 +1,131 @@
+﻿@page "/profile/registration"
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
+@model APMLibrary.Web.Pages.ProfilePages.RegistrationModel
+@{
+    this.ViewData["Title"] = "Регистрация профиля";
+    bool CheckValidation(string name) => this.ModelState[name] == null
+        || this.ModelState[name]?.ValidationState == ModelValidationState.Valid;
+}
+@section Supports {
+    <li class="nav-item">
+        <a href="#" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
+    </li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Профиль", null }, { "Войти в профиль", null }
+    });
+}
+<div class="row w-100 mb-5 justify-content-center">
+    @if (!this.ModelState.IsValid)
+    {
+        await this.Html.RenderPartialAsync("AlertPartial", "");
+    }
+    <div class="col-12 col-md-8 bg-white custom-bg-white p-4 " style="border-radius: 10px;">
+
+        <h1 class="fs-2 fw-bolder mb-5">Регистрация профиля</h1>
+        <form class="needs-validation" method="post" asp-page="Registration" enctype="multipart/form-data" asp-antiforgery="true">
+
+            <div class="row mb-4">
+                <div class="col-12 col-lg-6">
+                    <label class="form-label">Логин профиля:</label>
+                    <input asp-for="RegisterModel.Authorization.Login" type="text" maxlength="50" placeholder="Введите логин профиля"
+                        class="form-control @(CheckValidation("RegisterModel.Authorization.Login") ? "" : "is-invalid")" required>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="RegisterModel.Authorization.Login"></span>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <label class="form-label">Пароль профиля:</label>
+                    <div class="input-group has-validation">
+                        <input id="password" asp-for="RegisterModel.Authorization.Password" type="password" maxlength="50" placeholder="Введите пароль профиля"
+                            class="form-control @(CheckValidation("RegisterModel.Authorization.Password") ? "" : "is-invalid")" required>
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon">
+                            <i id="password-icon" class="bi bi-eye-slash-fill"></i>
+                        </button>
+                    </div>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="RegisterModel.Authorization.Password"></span>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12 col-lg-6">
+                    <label class="form-label">Имя пользователя:</label>
+                    <input asp-for="RegisterModel.Name" class="form-control @(CheckValidation("RegisterModel.Name") ? "" : "is-invalid")"
+                           type="text" maxlength="50" placeholder="Введите ваше имя" required>
+
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="RegisterModel.Name"></span>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <label class="form-label">Фамилия пользователя:</label>
+                    <input asp-for="RegisterModel.Surname" class="form-control @(CheckValidation("RegisterModel.Surname") ? "" : "is-invalid")"
+                           type="text" maxlength="50" placeholder="Введите вашу фамилию" required>
+
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="RegisterModel.Surname"></span>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-12 col-lg-6">
+                    <label class="form-label">Электронная почта:</label>
+                    <input asp-for="RegisterModel.Email" class="form-control @(CheckValidation("RegisterModel.Email") ? "" : "is-invalid")"
+                           type="email" maxlength="50" placeholder="Пример: useremail@yandex.ru" required>
+
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="RegisterModel.Email"></span>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <label class="form-label">Номер телефона (необязательно):</label>
+                    <input asp-for="RegisterModel.Phone" class="form-control @(CheckValidation("RegisterModel.Phone") ? "" : "is-invalid")"
+                           type="text" maxlength="12" placeholder="Пример: +79009009090">
+
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="RegisterModel.Phone"></span>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" required/>
+                        <label class="form-check-label">Принимаю <a class="text-decoration-none" href="#">пользовательское соглашение</a></label>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="RegisterModel.Authorization.RememberMe" />
+                        <label class="form-check-label"> Запомнить настройки для входа</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <input class="btn btn-primary mb-3 col-12 col-md-8" type="submit" value="Регистрация профиля" />
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script id="password-hideshow" type="text/javascript">
+        $(this.document).ready(function () {
+            var changeClass = (added, deleted) => {
+                $('#password-icon').addClass(added); $('#password-icon').removeClass(deleted);
+            };
+            var isPasswordHide = false;
+            $('#button-addon').click(function () {
+                if (isPasswordHide == false) {
+                    $('#password').attr('type', 'text'); changeClass('bi-eye-fill', 'bi-eye-slash-fill');
+                }
+                else { $('#password').attr('type', 'password'); changeClass('bi-eye-slash-fill', 'bi-eye-fill'); }
+                isPasswordHide = !isPasswordHide;
+            });
+        });
+        $(window).on('load', () => $('#myModal').modal('show'));
+    </script>
+}

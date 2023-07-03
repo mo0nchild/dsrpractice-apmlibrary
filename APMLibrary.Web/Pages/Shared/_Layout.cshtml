@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using APMLibrary.Web.ViewComponents;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,27 +10,12 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/APMLibrary.Web.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="icon" type="image/x-icon" href="/img/logo.png">
-    @await RenderSectionAsync("Style", required: false)
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-    @*<div class="bg-white fixed-top custom-shadow">
-        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mx-5 border-bottom">
-            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-                <img src="~/img/logo.png" alt="..." width="40" height="32" />
-                <span class="mx-2 fs-4">Библиотека</span>
-            </a>
-
-            <ul class="nav col-12 flex-grow-1 col-md-auto mb-2 justify-content-center mb-md-0" style="font-size: 18px;">
-                @await RenderSectionAsync("Supports", required: false)
-            </ul>
-            <div class="text-end">
-                <button type="button" class="btn btn-outline-dark me-2">Войти</button>
-                <button type="button" class="btn btn-dark">Регистрация</button>
-            </div>
-        </header>
-    </div>*@
     <div class="bg-white navbar-expand-lg fixed-top custom-shadow">
         <header class="d-flex flex-wrap align-items-center justify-content-between justify-content-md-between py-3 mx-5 border-bottom">
             <a href="/" class="d-flex align-items-center mb-md-0 me-md-auto text-dark text-decoration-none">
@@ -46,14 +32,13 @@
                     @await RenderSectionAsync("Supports", required: false)
                 </ul>
                 <div class="text-end">
-                    <button type="button" class="btn btn-outline-dark me-2">Войти</button>
-                    <button type="button" class="btn btn-dark">Регистрация</button>
+                    @await this.Component.InvokeAsync(typeof(ProfileNavViewComponent))
                 </div>
             </div>
         </header>
     </div>
 
-    <div class="container" style="flex-grow: 1; margin-top: 100px;">
+    <div class="container w-100" style="flex-grow: 1; margin-top: 90px;">
         <main role="main" class="mb-3 mb-sm-3 h-100"> @RenderBody() </main>
     </div>
 
