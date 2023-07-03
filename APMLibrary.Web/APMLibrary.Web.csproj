@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\APMLibrary.Bll\APMLibrary.Bll.csproj" />
+    <ProjectReference Include="..\APMLibrary.Bll\APMLibrary.Bll.csproj" />
     <ProjectReference Include="..\APMLibrary.Bll\APMLibrary.Bll.csproj" />
     <ProjectReference Include="..\APMLibrary.Dal\APMLibrary.Dal.csproj" />
   </ItemGroup>

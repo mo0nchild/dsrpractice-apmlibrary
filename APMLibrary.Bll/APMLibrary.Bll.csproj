@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\dsrpractice-apmlibrary\APMLibrary.Dal\APMLibrary.Dal.csproj" />
+    <ProjectReference Include="..\APMLibrary.Dal\APMLibrary.Dal.csproj" />
   </ItemGroup>
 
   <ItemGroup>
