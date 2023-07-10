@@ -12,15 +12,12 @@ namespace APMLibrary.Dal.Entities
     public partial class Publication : object
     {
         public int Id { get; set; } = default!;
-        public string VendorCode { get; set; } = default!;
-
         public string Title { get; set; } = default!;
         public string AuthorName { get; set; } = default!;
         public int NumberPages { get;set; } = default!;
         public string? Description { get; set; } = default!;
 
         public DateOnly YearIssue { get; set; } = default!;
-        public bool ForSubscriber { get; set; } = default!;
         public byte[] Body { get; set; } = default!;
         public bool Published { get; set; } = default!;
 

@@ -1,6 +1,7 @@
-using APMLibrary.Bll.Commands;
+using APMLibrary.Bll.Commands.ProfileCommands;
 using APMLibrary.Bll.Common.Exceptions;
-using APMLibrary.Web.ViewModels;
+using APMLibrary.Bll.Models;
+using APMLibrary.Web.ViewModels.ProfileViewModels;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -43,7 +44,8 @@ namespace APMLibrary.Web.Pages.ProfilePages
                 var profileIdentity = new ClaimsIdentity(new List<Claim>()
                 {
                     new Claim(ClaimTypes.PrimarySid, requestResult.ToString()),
-                    new Claim(ClaimTypes.IsPersistent, this.RegisterModel.Authorization.RememberMe.ToString())
+                    new Claim(ClaimTypes.IsPersistent, this.RegisterModel.Authorization.RememberMe.ToString()),
+                    new Claim(ClaimTypes.Role, ProfileType.User.ToString()),
 
                 }, CookieAuthenticationDefaults.AuthenticationScheme);
 

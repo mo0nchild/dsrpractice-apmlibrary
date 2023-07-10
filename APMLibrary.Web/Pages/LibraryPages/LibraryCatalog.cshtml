@@ -1,16 +1,12 @@
 ﻿@page "/catalog"
+@using APMLibrary.Bll.Requests.BookRequests;
 @using APMLibrary.Web.ViewComponents;
+@using Microsoft.Extensions.Options;
+
 @model APMLibrary.Web.Pages.LibraryPages.LibraryCatalogModel
+@inject IOptions<APMLibrary.Web.Configurations.ListCatalogOptions> PageOptions;
 @{
     this.ViewData["Title"] = "Библиотека";
-}
-@section Supports {
-    <li class="nav-item">
-        <a href="#" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
-    </li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
 }
 @{
     await this.Html.RenderPartialAsync("SectionsPartial");
@@ -31,37 +27,33 @@
 
             <h2 class="fs-5 fw-bolder mb-4">Категории и жанры</h2>
             @{
-                var categories = new Dictionary<string, List<string>>()
-                {
-                    { "Категория 1", new () { "Жанр 1", "Жанр 2", "Жанр 3" } }, 
-                    { "Категория 2", new () { "Жанр 4", "Жанр 5", "Жанр 6" } }, 
-                    { "Категория 3", new () { "Жанр 7", "Жанр 8", "Жанр 9" } },
-                    { "Категория 4", new () { "Жанр 10", "Жанр 11", "Жанр 12" } },
-                    { "Категория 5", new () { "Жанр 13", "Жанр 14", "Жанр 15" } }, 
-                    { "Категория 6", new () { "Жанр 16", "Жанр 17", "Жанр 18" } }, 
-                    { "Категория 7", new () { "Жанр 19", "Жанр 20", "Жанр 21" } },
-                };
+                var categoryGroups = this.Model.Genres.GroupBy(item => item.Category.Name)
+                    .Select(item => new { 
+                        Category = item.Key, 
+                        Genres = item.Select(p => p.Name).ToList(),
+                    }).ToList();
             }
             @{
-                void RenderCategoryTreeview()
+                async Task RenderCategoryTreeview()
                 {
                     <ul class="list-group list-group-flush px-2" style="overflow-y: auto; height: 250px;">
-                        
-                        @for(var index = 0; index < categories.Count; index++)
+
+                        @for (var index = 0; index < categoryGroups.Count; index++)
                         {
-                            var item = categories.ElementAt(index);
+                            var item = categoryGroups.ElementAt(index);
                             <li class="list-group-item p-0 my-1" style="border-bottom: 1px solid #212529">
                                 <button class="btn btn-outline-dark w-100 border-0 border-bottom-1" type="button" data-bs-toggle="collapse" 
                                     data-bs-target="@($"#collapseGenre{index}")">
-                                    @item.Key
+                                    @item.Category
                                 </button>
                                 <div class="collapse" id="@($"collapseGenre{index}")">
                                     <div class="card card-body m-3 overflow-auto p-1">
                                        <ul class="list-group list-group-flush">
-                                            @foreach(var prop in item.Value) 
+                                            @foreach(var prop in item.Genres) 
                                             {
                                                 <li class="list-group-item">
-                                                    <a class="text-decoration-none" href="#">@prop</a>
+                                                    <a class="text-decoration-none" asp-page="/LibraryPages/ListCatalog" 
+                                                        asp-route-CategoryGenre="@prop">@prop</a>
                                                 </li> 
                                             }
                                         </ul>
@@ -77,28 +69,60 @@
                     Отобразить список
                 </button>
                 <div class="collapse" id="collapseCategory">
-                    @{ RenderCategoryTreeview(); }
+                    @{ 
+                        await RenderCategoryTreeview(); 
+                    }
                 </div>
             </div>
 
             <div class="d-none d-lg-block">
-                @{ RenderCategoryTreeview(); }
+                @{
+                    await RenderCategoryTreeview();
+                }
             </div>
 
         </div>
     </div>
 
     <div class="col-12 col-lg-8">
-        
+
         <div class="row mb-4">
             <div class="col-12">
-                @await this.Component.InvokeAsync(typeof(CatalogViewComponent), new { title = "Все книги",
-                href = this.Url.PageLink("/LibraryPages/ListCatalog") })
+                @{
+                    var allBookParam = new CatalogComponentParameter()
+                    {
+                        RedirectLink = "/catalog/list",
+                        Title = "Все публикации",
+                        
+                        Request = new GetBooksListRequest()
+                        {
+                            IsPublished = true,
+                            SortingType = SortingType.ByDate,
+                            Skip = 0,
+                            Take = PageOptions.Value.MaxItemsOnPage,
+                        }
+                    };
+                }
+                @await this.Component.InvokeAsync(typeof(CatalogViewComponent), new { param = allBookParam })
             </div>
         </div>
         <div class="row mb-4">
             <div class="col-12">
-                @await this.Component.InvokeAsync(typeof(CatalogViewComponent), new { title = "Авторы" })
+                @{
+                    var bestBookParam = new CatalogComponentParameter()
+                    {
+                        RedirectLink = "/catalog/list",
+                        Title = "Топ рейтинга",
+                        Request = new GetBooksListRequest()
+                        {
+                            IsPublished = true,
+                            SortingType = SortingType.ByRating,
+                            Skip = 0,
+                            Take = PageOptions.Value.MaxItemsOnPage,
+                        }
+                    };
+                }
+                @await this.Component.InvokeAsync(typeof(CatalogViewComponent), new { param = bestBookParam })
             </div>
         </div>
 

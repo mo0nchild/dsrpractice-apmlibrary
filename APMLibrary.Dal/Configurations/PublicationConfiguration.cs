@@ -16,10 +16,9 @@ namespace APMLibrary.Dal.Configurations
             builder.HasKey(item => item.Id);
             builder.HasIndex(item => item.Id).IsUnique();
 
-            builder.Property(item => item.VendorCode).HasMaxLength(13);
             builder.Property(item => item.Title).HasMaxLength(100);
-            builder.Property(item => item.AuthorName).HasMaxLength(50);
             builder.Property(item => item.Description).HasColumnType("text");
+            builder.Property(item => item.AuthorName).HasMaxLength(50);
 
             builder.HasOne(item => item.Language).WithMany(item => item.Publications)
                 .HasForeignKey(item => item.LanguageId).HasPrincipalKey(item => item.Id);

@@ -1,5 +1,8 @@
+using APMLibrary.Bll.Requests.BookRequests;
 using APMLibrary.Web.Configurations;
-using APMLibrary.Web.ViewModels;
+using APMLibrary.Web.ViewModels.ComponentsViewModels;
+using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
@@ -12,8 +15,14 @@ namespace APMLibrary.Web.Pages.LibraryPages
     public partial class ListCatalogModel : PageModel
     {
         public readonly ListCatalogOptions pageOptions = default!;
-        public ListCatalogModel(IOptions<ListCatalogOptions> options) : base() 
+
+        protected readonly IMapper mapper = default!;
+        protected readonly IMediator mediator = default!;
+
+        public ListCatalogModel(IOptions<ListCatalogOptions> options, IMapper mapper, IMediator mediator) : base() 
         {
+            this.mediator = mediator;
+            this.mapper = mapper;
             this.pageOptions = options.Value;
         }
 
@@ -30,17 +39,24 @@ namespace APMLibrary.Web.Pages.LibraryPages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            this.Catalog.Items.Add(new () 
+            this.FilterModel.Language = FilterModel.Language == "null" ? null : FilterModel.Language;
+            var requestResult = await this.mediator.Send(new GetBooksListRequest()
             {
-                Description = "ƒанна€ книга раскрывает ¬ам, уважаемый читатель, пошаговые действи€ достижени€ успеха. ѕоможет пон€ть и осознать, что именно дл€ ¬ас €вл€етс€ успехом. ѕоможет обрести здоровье, любовь, финансовую независимость и прочее факторы успешных людей. —оветую ¬ам прочесть ее несколько раз,или сделать так , чтобы она всегда была у вас под рукой, как шпаргалка, котора€ дает ответы на самый главный вопрос.",
-                FirstLine = "Ќазвание книги 1",
-                LastLine = " рутой автор 1",
-                ForSubscriber = false,
-                PageCount = 200,
-                Rating = 3.5
-            });
+                SortingType = this.mapper.Map<SortingType>(this.FilterModel.OrderType),
+                IsPublished = true,
+                GenreFilter = this.CategoryGenre,
 
-            this.Catalog.AllCount = 2000;
+                LanguageFilter = this.FilterModel.Language,
+                TextFilter = this.FilterModel.SearchingText,
+                
+                Skip = this.pageOptions.MaxItemsOnPage * this.CurrentPage,
+                Take = this.pageOptions.MaxItemsOnPage,
+            });
+            this.Catalog = new BookCatalogViewModel()
+            {
+                AllCount = requestResult.AllBooksCount,
+                Items = this.mapper.Map<IEnumerable<CatalogItemViewModel>>(requestResult.Books),
+            };
             return this.Page();
         }
     }

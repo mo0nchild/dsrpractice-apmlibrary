@@ -18,9 +18,7 @@ namespace APMLibrary.Dal.Entities
 
         public string? Email { get; set; } = default!;
         public string? Phone { get; set; } = default!;
-        public byte[]? Image { get; set; } = default!;
-
-        public bool Subscriber { get; set; } = default!;
+        public byte[]? Image { get; set; } = null;
         public Guid Reference { get; set; } = Guid.Empty;
 
         public Authorization Authorization { get; set; } = default!;

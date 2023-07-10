@@ -1,26 +1,18 @@
 ﻿@using APMLibrary.Web.ViewModels;
-@model APMLibrary.Web.ViewModels.FilterViewModel
+@using APMLibrary.Web.ViewModels.SupportViewModels;
+@using APMLibrary.Web.ViewModels.ComponentsViewModels;
+@model FilterViewModel
 @{
-    var filterSubscribe = new List<SelectListItem>()
+    var languageList = new List<SelectListItem>() { new("Все языки", "null") };
+    foreach (var item in (this.ViewBag.Languages as IEnumerable<LanguageViewModel>) ?? new LanguageViewModel[] { })
     {
-        new ("Без подписки", false.ToString()), new ("Для подписчиков", true.ToString()),
-    };
-    var filterLanguage = new SelectList(this.ViewBag.Languages);
+        languageList.Add(new SelectListItem(item.Name, item.Name));
+    }
     async Task RenderFilterContainer()
     {
         <form id="filter-form" method="get" asp-page="@this.ViewBag.Page" asp-page-handler="@(this.ViewBag.Handler)">
 
             <input type="hidden" asp-for="@this.Model.SearchingText" />
-            <div class="row mb-4">
-
-                <div class="col-12">
-                    <label class="form-label">Статус подписки:</label>
-
-                    <select class="form-select" asp-for="@this.Model.ForSubscriber" asp-items="filterSubscribe">
-                    </select>
-                </div>
-
-            </div>
 
             <div class="row mb-4">
 
@@ -36,7 +28,7 @@
 
                 <div class="col-12">
                     <label class="form-label">Язык текста:</label>
-                    <select class="form-select" asp-for="@this.Model.Language" asp-items="@filterLanguage">
+                    <select class="form-select" asp-for="@this.Model.Language" asp-items="@languageList">
                     </select>
                 </div>
 

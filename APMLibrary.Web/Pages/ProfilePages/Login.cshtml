@@ -6,14 +6,6 @@
     bool CheckValidation(string name) => this.ModelState[name] == null
         || this.ModelState[name]?.ValidationState == ModelValidationState.Valid;
 }
-@section Supports {
-    <li class="nav-item">
-        <a href="#" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
-    </li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
-}
 @{
     await this.Html.RenderPartialAsync("SectionsPartial");
     await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()

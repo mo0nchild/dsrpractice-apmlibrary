@@ -1,6 +1,4 @@
 using APMLibrary.Bll.Commands;
-using APMLibrary.Bll.Requests;
-using APMLibrary.Web.ViewModels;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -8,6 +6,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
+using APMLibrary.Bll.Models;
+using APMLibrary.Web.ViewModels.ProfileViewModels;
+using APMLibrary.Bll.Requests.ProfileRequests;
 
 namespace APMLibrary.Web.Pages.ProfilePages
 {
@@ -45,13 +46,18 @@ namespace APMLibrary.Web.Pages.ProfilePages
             }
             var profileIdentity = new ClaimsIdentity(new List<Claim>()
             {
-                new Claim(ClaimTypes.PrimarySid, requestResult.ToString()!),
-                new Claim(ClaimTypes.IsPersistent, this.AuthorizationModel.RememberMe.ToString())
+                new Claim(ClaimTypes.PrimarySid, requestResult.Id.ToString()),
+                new Claim(ClaimTypes.Role, ProfileType.User.ToString()),
+                new Claim(ClaimTypes.IsPersistent, this.AuthorizationModel.RememberMe.ToString()),
 
             }, CookieAuthenticationDefaults.AuthenticationScheme);
+            if (requestResult.ProfileType == ProfileType.Admin)
+            {
+                profileIdentity.AddClaim(new Claim(ClaimTypes.Role, ProfileType.Admin.ToString()));
+            }
             await this.HttpContext.SignInAsync(new ClaimsPrincipal(profileIdentity));
-
             this.HttpContext.Session.SetString("RememberMe", "");
+
             return this.RedirectToPage("/ProfilePages/ProfileInfo");
         }
     }

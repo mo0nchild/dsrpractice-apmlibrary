@@ -1,0 +1,154 @@
+﻿@page "/profile/admin/supports"
+@using APMLibrary.Bll.Commands.SupportCommand;
+@using APMLibrary.Web.ViewModels.SupportViewModels;
+@model APMLibrary.Web.Pages.AdminPages.SupportSettingsModel
+@{
+    this.ViewData["Title"] = "Справочники";
+
+    async Task RenderSupportList<TModel>(List<TModel> items, SupportType type, Func<dynamic, string> dataRender)
+    {
+        @foreach (dynamic? item in items)
+        {
+            <li class="list-group-item d-flex flex-row justify-content-between">
+                <span class="me-2 text-nowrap overflow-hidden">@dataRender.Invoke(item)</span>
+                <a class="btn-close" asp-route-id="@item?.Id" asp-route-type="@type"
+                    asp-page="SupportSettings" asp-page-handler="Delete"></a>
+            </li>
+        }
+    }
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Профиль", "/ProfilePages/ProfileInfo" }, { "Админ", null }, { "Справочники", null }
+    });
+}
+<div class="row w-100 mb-5 justify-content-center g-lg-4">
+
+    @if (!this.ModelState.IsValid)
+    {
+        await this.Html.RenderPartialAsync("AlertPartial", "Неверно введены данные");
+    }
+
+    <div class="col-12 col-md-4 mb-4">
+        @{
+            await this.Html.RenderPartialAsync("AdminNavPartial");
+        }
+    </div>
+    
+    <div class="col-12 col-md-8 mb-4">
+        <div class="bg-white custom-bg-white p-4" style="border-radius: 10px;">
+
+            <h1 class="fs-4 fw-bolder mb-4">Настройка справочников</h1>
+            <div class="text-danger form-text" style="font-size: 16px;" asp-validation-summary="All" ></div>
+            <div class="row mb-4">
+                <h2 class="fs-5 mb-3">Список языков перевода</h2>
+
+                <div class="col-12 col-md-6 mb-3">
+                    <ul class="list-group border" style="height: 150px; overflow-y: auto;">
+                        @{
+                            await RenderSupportList<LanguageViewModel>(this.Model.Languages, SupportType.Language, item => item.Name);
+                        }
+                    </ul>
+                </div>
+
+                <form class="col-12 col-md-6" method="post" asp-page="SupportSettings" asp-page-handler="Language" asp-antiforgery="true">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <label class="form-label">Название языка перевода:</label>
+                            <input class="form-control" type="text" name="languageName" placeholder="Введите название языка перевода" maxlength="50" required />
+                        </div>
+                        <div class="col-12">
+                            <input class="btn btn-dark w-100" type="submit" value="Добавить язык перевода" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr />
+            <div class="row mb-4">
+                <h2 class="fs-5 mb-3">Список типов публикаций</h2>
+
+                <div class="col-12 col-md-6 mb-3">
+                    <ul class="list-group border" style="height: 150px; overflow-y: auto;">
+                        @{
+                            await RenderSupportList<BookTypeViewModel>(this.Model.BookTypes, SupportType.BookType, item => item.Name);
+                        }
+                    </ul>
+                </div>
+
+                <form class="col-12 col-md-6" asp-antiforgery="true" method="post" asp-page="SupportSettings" asp-page-handler="BookType">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <label class="form-label">Название типа публикации:</label>
+                            <input class="form-control" type="text" name="typeName" placeholder="Введите название типа публикации" maxlength="50" required />
+                        </div>
+                        <div class="col-12">
+                            <input class="btn btn-dark w-100" type="submit" value="Добавить тип публикации" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr />
+            <div class="row mb-4">
+                <h2 class="fs-5 mb-3">Список категорий публикаций</h2>
+
+                <div class="col-12 col-md-6 mb-3">
+                    <ul class="list-group border" style="height: 150px; overflow-y: auto;">
+                        @{
+                            await RenderSupportList<CategoryViewModel>(this.Model.Categories, SupportType.Category, item => item.Name);
+                        }
+                    </ul>
+                </div>
+
+                <form class="col-12 col-md-6" asp-antiforgery="true" method="post" asp-page="SupportSettings" asp-page-handler="Category">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <label class="form-label">Название категории публикации:</label>
+                            <input class="form-control" type="text" name="categoryName" placeholder="Введите название категории публикации" maxlength="50" required />
+                        </div>
+                        <div class="col-12">
+                            <input class="btn btn-dark w-100" type="submit" value="Добавить категорию публикации" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr />
+            <div class="row mb-4">
+                <h2 class="fs-5 mb-3">Список жанров публикаций</h2>
+
+                <div class="col-12 col-md-6 mb-3">
+                    <ul class="list-group border" style="height: 220px; overflow-y: auto;">
+                        @{
+                            await RenderSupportList<GenreViewModel>(this.Model.Genres, SupportType.Genre, 
+                                item => $"{item.Name} / {item.Category.Name}");
+                        }
+                    </ul>
+                </div>
+
+                <form class="col-12 col-md-6" asp-antiforgery="true" method="post" asp-page="SupportSettings" asp-page-handler="Genre">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <label class="form-label">Название жанра публикации:</label>
+                            <input class="form-control" type="text" name="genreName" placeholder="Введите название жанра публикации" maxlength="50" required />
+                        </div>
+                        @{
+                            var categoryList = new SelectList(this.Model.Categories.Select(item => item.Name).ToList());
+                        }
+                        <div class="col-12 mb-4">
+                            <label class="form-label">Выбрать категорию:</label>
+                            <select class="form-select" name="categoryName" asp-items="@categoryList"></select>
+                        </div>
+
+                        <div class="col-12">
+                            <input class="btn btn-dark w-100" type="submit" value="Добавить жанр публикации" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,115 @@
+﻿@model APMLibrary.Web.ViewModels.BookViewModels.BookInfoViewModel
+@{
+    var imageUrl = (this.Model.Image == null ? "/img/nobookcover.png"
+        : $"data:image;base64,{Convert.ToBase64String(this.Model.Image)}");
+}
+<div class="row w-100 mb-4 justify-content-center g-4">
+
+    <div class="col-12 col-md-3">
+        <div class="bg-white custom-bg-white p-3">
+
+            <div class="card">
+                <div class="card-header">
+                    <label class="form-label fw-bolder" style="font-size: 16px;">Обложка книги:</label>
+                </div>
+                <div class="card-body" style="height: 200px; width: auto;">
+                    <img class="mb-3 card-img-top w-100 h-100" style="object-fit: contain;" src="@imageUrl" alt="...">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-12 col-md-9">
+        <div class="bg-white custom-bg-white p-4 overflow-hidden">
+
+            <h1 class="fs-4 fw-bolder mb-3 h-100 overflow-hidden text-wrap" style="overflow-wrap:anywhere;">@this.Model.Title</h1>
+            <div class="row w-100 mb-4">
+                <div class="col-12 col-md-4 overflow-hidden text-nowrap">
+
+                    <p class="text-primary" style="font-size: 16px;">@this.Model.AuthorName</p>
+
+                </div>
+                <div class="col-12 col-md-8 overflow-hidden text-nowrap">
+
+                    @for (var count = 0; count < 5; count++)
+                    {
+                        <span class="fa fa-star @((this.Model.Rating < count + 1) ? "" : "checked-star")"></span>
+                    }
+                    
+                    <span style="font-size: 14px;">&nbsp;&nbsp;Оценка: @($"{this.Model.Rating:F2}")</span>
+                </div>
+            </div>
+
+            <div class="row w-100 mb-5">
+                <h2 class="fs-5 fw-bolder mb-3">Информация об издании:</h2>
+
+                <div class="col-12 col-md-4">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Объем публикации:</label>
+                        <input class="form-control bg-white" value="@this.Model.PageCount cтраниц(ы)" disabled />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Дата создания:</label>
+                        <input class="form-control bg-white" value="@this.Model.Date" disabled />
+                    </div>
+                    
+                </div>
+                <div class="col-12 col-md-8 mb-3">
+                    
+                    <label class="form-label">Описание содержимого:</label>
+                    <textarea class="form-control bg-white" style="max-height: 200px; min-height: 150px;" 
+                        rows="5" disabled>@this.Model.Description</textarea>
+
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label class="form-label">Язык перевода:</label>
+                    <input class="form-control bg-white" value="@this.Model.Language" disabled />
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label class="form-label">Тип публикации:</label>
+                    <input class="form-control bg-white" value="@this.Model.BookType" disabled />
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label class="form-label">Артикул:</label>
+                    <input class="form-control bg-white" value="@this.Model.VenderCode" disabled />
+                </div>
+            </div>
+
+            <div class="row w-100 mb-4">
+                <div class="col-12 col-md-4 mb-3">
+                    <h2 class="fs-5 fw-bolder mb-3">Издатель:</h2>
+                    <a class="btn btn-outline-secondary p-1 d-flex flex-row align-items-center">
+                        @{
+                            var publisherImage = (this.Model.Publisher.Image == null ? "/img/noprofileimage.png"
+                            : $"data:image;base64,{Convert.ToBase64String(this.Model.Publisher.Image)}");
+                        }
+                        <img src="@publisherImage" alt="..." class="border border-secondary"
+                             style="width: 40px; height: 40px; border-radius: 10px; object-fit: contain;" />
+
+                        <div class="flex-grow-1 overflow-hidden mx-2">
+                            <p class="text-start text-dark m-0">@this.Model.Publisher.Name @this.Model.Publisher.Surname</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-12 col-md-8 mb-3">
+                    <h2 class="fs-5 fw-bolder mb-3">Жанры публикации:</h2>
+
+                    <div class="d-flex flex-wrap flex-row">
+                        @foreach (var item in this.Model.Genres)
+                        {
+                            <div class="badge text-dark bg-white fw-normal border border-1 border-secondary m-1 p-2"
+                                style="font-size: 14px;">@item.Name</div>
+                        }
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

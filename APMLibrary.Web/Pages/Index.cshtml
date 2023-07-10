@@ -4,14 +4,6 @@
     ViewData["Title"] = "Главная";
     const string image = "https://previews.123rf.com/images/popmarleo/popmarleo1807/popmarleo180700042/105673765-books-hand-drawn-fun-colored-background-on-yellow-vector-cartoon.jpg";
 }
-@section Supports {
-    <li class="nav-item">
-        <a href="/catalog" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
-        </li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
-}
 
 @{
     await this.Html.RenderPartialAsync("SectionsPartial");

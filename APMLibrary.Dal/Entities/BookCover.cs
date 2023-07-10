@@ -12,8 +12,8 @@ namespace APMLibrary.Dal.Entities
         [property: KeyAttribute]
         public int Id { get; set; } = default!;
 
-        public byte[]? FrontCover { get; set; } = default!;
-        public byte[]? BackCover { get; set; } = default!;
+        public byte[]? FrontCover { get; set; } = null;
+        public byte[]? BackCover { get; set; } = null;
         public ICollection<Publication> Publications { get; set; } = default!;
     }
 }

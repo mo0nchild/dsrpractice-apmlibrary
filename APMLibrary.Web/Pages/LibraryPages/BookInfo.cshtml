@@ -1,0 +1,109 @@
+﻿@page "/catalog/book"
+@model APMLibrary.Web.Pages.LibraryPages.BookInfoModel
+@{
+    this.ViewData["Title"] = "Просмотр издания";
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Библитека", "/LibraryPages/LibraryCatalog" }, { "Просмотр издания", null }
+    });
+    
+}
+@section Styles {
+    <style type="text/css">
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+    </style>
+}
+
+@if (!this.ModelState.IsValid)
+{
+    await this.Html.RenderPartialAsync("AlertPartial", "Неверно введены данные формы оценки");
+}
+@if (this.Model.Message != null)
+{
+    <div class="mb-4 border border-1 border-secondary alert alert-light alert-dismissible fade show" 
+        role="alert" style="border-radius:16px;">
+
+        <i class="bi bi-heart"></i>
+        <strong>Уведомление!</strong>&nbsp;@this.Model.Message
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+<div class="text-danger form-text" style="font-size: 16px;" asp-validation-summary="All"></div>
+@{
+    await this.Html.RenderPartialAsync("BookShowPartial", this.Model.BookInfo);
+}
+<div class="row justify-content-end mb-5 w-100">
+
+    <div class="col-12 col-md-9">
+
+        <div class="bg-white custom-bg-white p-4 overflow-hidden">
+            
+
+            <div class="row mb-5">
+                <h2 class="fs-5 fw-bolder mb-4">Возможные действия</h2>
+
+                <div class="col-8 ">
+                    <a class="btn btn-dark w-100">Читать онлайн</a>
+                </div>
+
+                <div class="col-2 ">
+                    <a class="btn btn-outline-dark w-100"><i class="bi bi-bookmark-plus"></i></a>
+                </div>
+
+                <div class="col-2">
+                    <a asp-page="/LibraryPages/BookInfo" asp-route-BookId="@this.Model.BookId" 
+                        asp-page-handler="File" class="btn btn-outline-dark w-100"><i class="bi bi-cloud-download"></i></a>
+                </div>
+
+            </div>
+
+            <form class="row mb-4" method="post" asp-antiforgery="true" asp-page="BookInfo">
+                <h2 class="fs-5 fw-bolder mb-4">Оставить отзыв на публикацию</h2>
+
+                <div class="col-12 mb-3">
+                    <label class="form-label">Комментарий:</label>
+                    <textarea name="Comment" class="form-control" rows="4" style="resize:none;" maxlength="200"></textarea>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <label class="form-label">Ваша оценка:</label>
+                    <div class="input-group">
+                        <button type="button" class="btn btn-outline-dark" onclick="this.parentNode.querySelector('#rating').stepDown();">
+                            -
+                        </button>
+
+                        <input id="rating" type="number" class="form-control mx-2" name="rating" min="0" max="5" 
+                            value="0" style="text-align: center;" required>
+
+                        <button type="button" class="btn btn-outline-dark" onclick="this.parentNode.querySelector('#rating').stepUp();">
+                            +
+                        </button>
+                    </div>
+                </div>
+                <input type="hidden" name="PublishId" value="@this.Model.BookId"/>
+                <div class="col-6 col-md-6">
+                    <label class="form-label">&nbsp;</label>
+                    <input type="submit" class="btn btn-dark w-100" value="Отправить отзыв" />
+                </div>
+                <div class="col-12 col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <a asp-page="/LibraryPages/ListRatings" asp-route-BookId="@this.Model.BookId" 
+                        class="btn btn-outline-dark w-100">Показать все</a>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

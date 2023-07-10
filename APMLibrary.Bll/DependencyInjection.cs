@@ -1,4 +1,5 @@
-﻿using APMLibrary.Bll.Common.Mappings;
+﻿using APMLibrary.Bll.Common.Behaviors;
+using APMLibrary.Bll.Common.Mappings;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,9 @@ namespace APMLibrary.Bll
             });
             services.AddMediatR(options =>
             {
+                options.AddOpenBehavior(typeof(LoggingBehavior<,>), ServiceLifetime.Transient)
+                    .AddOpenBehavior(typeof(ValidationBehavior<,>), ServiceLifetime.Transient);
+
                 options.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
             });
             return services;

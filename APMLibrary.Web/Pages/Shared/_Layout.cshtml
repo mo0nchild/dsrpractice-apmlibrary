@@ -16,6 +16,12 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
+    <div class="m-4" style="position: fixed; bottom: 0; right: 0; width: 50px;">
+        <button id="page-up-btn" class="btn btn-dark border-1 border-white">
+            <i class="bi bi-arrow-bar-up fs-5"></i>
+        </button>
+    </div>
+
     <div class="bg-white navbar-expand-lg fixed-top custom-shadow">
         <header class="d-flex flex-wrap align-items-center justify-content-between justify-content-md-between py-3 mx-5 border-bottom">
             <a href="/" class="d-flex align-items-center mb-md-0 me-md-auto text-dark text-decoration-none">
@@ -29,6 +35,18 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="nav col-12 navbar-nav mt-2 mt-lg-0 flex-grow-1 col-md-auto justify-content-center" 
                     style="font-size: 18px;">
+                    @{
+                        var selectionLink = (string path) => this.Context.Request.Path == path 
+                            ? "link-secondary border-bottom border-secondary border-3" : "link-dark";
+                    }
+                    <li class="nav-item">
+                        <a href="/catalog" class="nav-link px-3 @selectionLink("/catalog")">Библиотека</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/addbook" class="nav-link px-3 @selectionLink("/addbook")">Загрузить</a>
+                    </li>
+                    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
                     @await RenderSectionAsync("Supports", required: false)
                 </ul>
                 <div class="text-end">
@@ -59,6 +77,11 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#page-up-btn").click(() => $("html, body").animate({ scrollTop: 0 }, 150));
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

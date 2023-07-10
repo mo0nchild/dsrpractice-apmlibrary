@@ -1,15 +1,23 @@
 ﻿@page "/profile/info"
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
 @model APMLibrary.Web.Pages.ProfilePages.ProfileInfoModel
 @{
     this.ViewData["Title"] = "Настройка профиля";
+    bool CheckValidation(string name) => this.ModelState[name] == null
+        || this.ModelState[name]?.ValidationState == ModelValidationState.Valid;
 }
-@section Supports {
-    <li class="nav-item">
-        <a href="#" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
-    </li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
+@section Styles {
+
+    <style type="text/css">
+
+        #profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+    </style>
+
 }
 @{
     await this.Html.RenderPartialAsync("SectionsPartial");
@@ -18,6 +26,229 @@
         { "Главная", "/Index" }, { "Профиль", null }
     });
 }
-<div class="row w-100 mb-5 justify-content-center">
 
+<div class="row w-100 mb-5 justify-content-center">
+    @if (!this.ModelState.IsValid || this.Model.ErrorMessage != null)
+    {
+        await this.Html.RenderPartialAsync("AlertPartial", "Неверно введены данные");
+    }
+    <div class="col-12 col-md-8 mb-4">
+        <div class="bg-white custom-bg-white p-4" style="border-radius: 10px;">
+
+            <h1 class="fs-3 fw-bolder mb-4">Настройка изображения</h1>
+            <form class="needs-validation row" method="post" asp-page="ProfileInfo" asp-page-handler="Image" enctype="multipart/form-data" asp-antiforgery="true">
+
+                <div class="col-lg-4 mb-2 mb-lg-0">
+                    <div class="card">
+                        <div class="card-header">
+                            <label class="form-label">Изображение профиля:</label>
+                        </div>
+                        <div class="card-body" style="height: 150px; width: auto;">
+                            @{
+                                var imageUrl = (this.Model.CurrentImage == null ? "/img/noprofileimage.png"
+                                    : $"data:image;base64,{Convert.ToBase64String(this.Model.CurrentImage)}");
+                            }
+                            <img class="mb-3 card-img-top" id="profile-image" src="@imageUrl" alt="...">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Файл изображения</label>
+                            <input name="imageFile" type="file" class="form-control" accept="image/*" onchange="loadFile(event, 'profile-image')" required/>
+
+                            <span class="invalid-feedback" style="display: block;" asp-validation-for="CurrentImage"></span>
+                        </div>
+                        <div class="col-12">
+                            <input class="btn btn-outline-dark w-100" type="submit" value="Изменить изображение" />
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-8">
+        <div class="bg-white custom-bg-white p-4" style="border-radius: 10px;">
+
+            <h1 class="fs-3 fw-bolder mb-4">Изменение данных профиля</h1>
+
+            @*<div asp-validation-summary="ModelOnly" />*@
+            @if (this.Model.ErrorMessage != null)
+            {
+                <div class="form-text text-danger mb-2" style="font-size: 16px;"> @this.Model.ErrorMessage </div>
+            }
+            <form class="needs-validation" method="post" asp-page="ProfileInfo" enctype="multipart/form-data" asp-antiforgery="true">
+
+                <div class="row mb-4">
+                    <div class="col-12 col-lg-6">
+                        <label class="form-label">Имя пользователя:</label>
+                        <input asp-for="ProfileModel.Name" class="form-control @(CheckValidation("ProfileModel.Name") ? "" : "is-invalid")"
+                               type="text" maxlength="50" placeholder="Введите ваше имя" required>
+
+                        <span class="invalid-feedback" style="display: block;" asp-validation-for="ProfileModel.Name"></span>
+                    </div>
+
+                    <div class="col-12 col-lg-6">
+                        <label class="form-label">Фамилия пользователя:</label>
+                        <input asp-for="ProfileModel.Surname" class="form-control @(CheckValidation("ProfileModel.Surname") ? "" : "is-invalid")"
+                               type="text" maxlength="50" placeholder="Введите вашу фамилию" required>
+
+                        <span class="invalid-feedback" style="display: block;" asp-validation-for="ProfileModel.Surname"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12 col-lg-6">
+                        <label class="form-label">Электронная почта:</label>
+                        <input asp-for="ProfileModel.Email" class="form-control @(CheckValidation("ProfileModel.Email") ? "" : "is-invalid")"
+                               type="email" maxlength="50" placeholder="Пример: useremail@yandex.ru" required>
+
+                        <span class="invalid-feedback" style="display: block;" asp-validation-for="ProfileModel.Email"></span>
+                    </div>
+
+                    <div class="col-12 col-lg-6">
+                        <label class="form-label">Номер телефона (необязательно):</label>
+                        <input asp-for="ProfileModel.Phone" class="form-control @(CheckValidation("ProfileModel.Phone") ? "" : "is-invalid")"
+                               type="text" maxlength="12" placeholder="Пример: +79009009090">
+
+                        <span class="invalid-feedback" style="display: block;" asp-validation-for="ProfileModel.Phone"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3 justify-content-center">
+                    <div class="col-12 col-lg-8">
+                        <input class="btn btn-dark w-100" type="submit" value="Изменить данные профиля" />
+                    </div>
+                </div>
+                
+            </form>
+            <div class="row mb-2 justify-content-center">
+                <div class="col-12 col-lg-4">
+                    <button type="button" class="btn btn-outline-dark w-100" data-bs-toggle="modal" data-bs-target="#changePassword">
+                        Изменить пароль
+                    </button>
+                    <form method="post" asp-page="ProfileInfo" asp-page-handler="Password" enctype="multipart/form-data" asp-antiforgery="true">
+
+                        <div class="modal fade" id="changePassword" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5">Изменение пароля</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
+                                                <label class="form-label">Старый пароль:</label>
+                                                <div class="input-group">
+                                                    <input id="old-password" name="oldPassword" type="password" maxlength="50" placeholder="Введите старый пароль"
+                                                           class="form-control" required>
+                                                    <button id="old-password-button" class="btn btn-outline-secondary" type="button">
+                                                        <i id="old-password-icon" class="bi bi-eye-slash-fill"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <label class="form-label">Новый пароль:</label>
+                                                <div class="input-group">
+                                                    <input id="new-password" name="newPassword" type="password" maxlength="50" placeholder="Введите новый пароль"
+                                                           class="form-control" required>
+                                                    <button id="new-password-button" class="btn btn-outline-secondary" type="button">
+                                                        <i id="new-password-icon" class="bi bi-eye-slash-fill"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Назад</button>
+                                        <input type="submit" class="btn btn-dark" value="Изменить" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-12 col-lg-4">
+
+                    <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Удалить профиль
+                    </button>
+
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Удаление профиля</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    При подтверждении ваш проифль будет удален из системы. Вы уверены в этом?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Назад</button>
+                                    <a class="btn btn-dark" asp-page="ProfileInfo" asp-page-handler="Delete">Подтвердить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
 </div>
+@section Scripts {
+
+    <script type="text/javascript">
+
+        const loadFile = function (event, output) {
+            var output = document.getElementById(output);
+            output.src = URL.createObjectURL(event.target.files[0]);
+
+            output.onload = () => {
+                URL.revokeObjectURL(output.src);
+            }
+        };
+
+        const makeWorker = function() {
+
+            const changeClass = (added, deleted, id) => {
+                $(`#${id}`).addClass(added); $(`#${id}`).removeClass(deleted);
+            };
+
+            let passwordValue = false;
+
+            return function (inputId, iconId) {
+                console.log(passwordValue);
+                if (passwordValue == false) {
+                    $(`#${inputId}`).attr('type', 'text'); changeClass('bi-eye-fill', 'bi-eye-slash-fill', iconId);
+                }
+                else { $(`#${inputId}`).attr('type', 'password'); changeClass('bi-eye-slash-fill', 'bi-eye-fill', iconId); }
+                passwordValue = !passwordValue;
+            }
+        }
+
+        $(this.document).ready(function () {
+
+            var newPassword = makeWorker();
+            var oldPassword = makeWorker();
+
+            $('#old-password-button').click(function () {
+                oldPassword('old-password', 'old-password-icon');
+                
+            });
+            $('#new-password-button').click(function () {
+
+                newPassword('new-password', 'new-password-icon');
+            });
+        });
+    </script>
+
+}

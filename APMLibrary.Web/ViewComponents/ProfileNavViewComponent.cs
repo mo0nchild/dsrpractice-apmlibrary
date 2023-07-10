@@ -1,5 +1,7 @@
-﻿using APMLibrary.Bll.Requests;
-using APMLibrary.Web.ViewModels;
+﻿using APMLibrary.Bll.Models;
+using APMLibrary.Bll.Requests;
+using APMLibrary.Bll.Requests.ProfileRequests;
+using APMLibrary.Web.ViewModels.ProfileViewModels;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +26,7 @@ namespace APMLibrary.Web.ViewComponents
                 return this.View<ProfileNavViewModel>(null);
             }
             var requestResult = await this._mediator.Send(new GetProfileRequest(profileId));
+            this.ViewBag.IsAdmin = this.HttpContext.User.HasClaim(ClaimTypes.Role, "Admin");
 
             return this.View(requestResult == null ? null 
                 : this._mapper.Map<ProfileNavViewModel>(requestResult));

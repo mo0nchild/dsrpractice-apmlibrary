@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using APMLibrary.Web.Middlewares;
 using APMLibrary.Web.Configurations;
+using APMLibrary.Bll.Models;
 
 namespace APMLibrary.Web
 {
@@ -30,8 +31,8 @@ namespace APMLibrary.Web
             });
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("User", item => item.RequireClaim(ClaimTypes.Role, "User"));
-                options.AddPolicy("Admin", item => item.RequireClaim(ClaimTypes.Role, "Admin"));
+                options.AddPolicy("User", item => item.RequireClaim(ClaimTypes.Role, ProfileType.User.ToString()));
+                options.AddPolicy("Admin", item => item.RequireClaim(ClaimTypes.Role, ProfileType.Admin.ToString()));
             });
             await builder.Services.AddDataAccessLayer(builder.Configuration);
             await builder.Services.AddBusinessLogicLayer(builder.Configuration);

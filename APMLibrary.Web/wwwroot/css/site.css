@@ -68,3 +68,12 @@ body {
     height: 160px;
     object-fit: contain;
 }
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 2px solid #888;
+    margin: 2em 1rem;
+    padding: 0;
+}

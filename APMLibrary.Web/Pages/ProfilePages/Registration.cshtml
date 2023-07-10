@@ -6,14 +6,6 @@
     bool CheckValidation(string name) => this.ModelState[name] == null
         || this.ModelState[name]?.ValidationState == ModelValidationState.Valid;
 }
-@section Supports {
-    <li class="nav-item">
-        <a href="#" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
-    </li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
-}
 @{
     await this.Html.RenderPartialAsync("SectionsPartial");
     await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
@@ -24,11 +16,13 @@
 <div class="row w-100 mb-5 justify-content-center">
     @if (!this.ModelState.IsValid)
     {
-        await this.Html.RenderPartialAsync("AlertPartial", "");
+        await this.Html.RenderPartialAsync("AlertPartial", "Неверно введены данные для регистрации");
     }
     <div class="col-12 col-md-8 bg-white custom-bg-white p-4 " style="border-radius: 10px;">
 
-        <h1 class="fs-2 fw-bolder mb-5">Регистрация профиля</h1>
+        <h1 class="fs-2 fw-bolder mb-4">Регистрация профиля</h1>
+
+        <div class="form-text mb-4 text-danger" style="font-size: 16px;" asp-validation-summary="ModelOnly" ></div>
         <form class="needs-validation" method="post" asp-page="Registration" enctype="multipart/form-data" asp-antiforgery="true">
 
             <div class="row mb-4">

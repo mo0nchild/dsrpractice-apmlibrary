@@ -17,13 +17,15 @@ namespace APMLibrary.Dal.Common
                 this._configuration = configurationBuilder.AddJsonStream(fileStream).Build();
             }
         }
-        public class DesignOptionsMonitor<TConfig> : IOptionsMonitor<TConfig> where TConfig : class, new()
+        public class DesignOptionsMonitor<TConfig> : IOptionsMonitor<TConfig>, IDisposable where TConfig : class, new()
         {
             public TConfig CurrentValue { get; private set; } = default!;
             public DesignOptionsMonitor(TConfig currentValue) => this.CurrentValue = currentValue;
 
             public TConfig Get(string? name) => this.CurrentValue;
-            public IDisposable OnChange(Action<TConfig, string> listener) => throw new NotImplementedException();
+            public IDisposable OnChange(Action<TConfig, string> listener) => this;
+
+            public void Dispose() { }
         }
         public LibraryDbContext CreateDbContext(string[] args)
         {

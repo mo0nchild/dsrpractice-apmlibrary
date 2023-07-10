@@ -1,12 +1,12 @@
-﻿@model APMLibrary.Web.ViewModels.ProfileNavViewModel
+﻿@using APMLibrary.Bll.Models;
+@model APMLibrary.Web.ViewModels.ProfileViewModels.ProfileNavViewModel
 @{
 }
 @*this.User.Identity != null && this.User.Identity.IsAuthenticated*@
 @if (this.Model != null)
 {
-    @*var imageUrl = (this.Model.Image == null ? "/img/noprofileimage.png" 
-        : $"data:image;base64,{Convert.ToBase64String(this.Model.Image)}");*@
-    var imageUrl = "/img/noprofileimage.png";
+    var imageUrl = (this.Model.Image == null ? "/img/noprofileimage.png" 
+        : $"data:image;base64,{Convert.ToBase64String(this.Model.Image)}");
 
     <div class="dropdown">
 
@@ -17,13 +17,17 @@
 
         </button>
 
-        <ul class="dropdown-menu mt-2 p-2" style="max-width: 200px;">
+        <ul class="dropdown-menu mt-2 p-2 px-3" style="max-width: 200px;">
             <li>
-                <span class="dropdown-item disabled overflow-hidden"> @this.Model.Name&nbsp;@this.Model.Surname </span>
+                <span class="dropdown-item disabled overflow-hidden p-0 py-1"> @this.Model.Name&nbsp;@this.Model.Surname </span>
             </li>
-            <li><a class="dropdown-item" asp-page="/ProfilePages/ProfileInfo">Настройки профиля</a></li>
+            <li><a class="dropdown-item overflow-hidden p-0 py-1" asp-page="/ProfilePages/ProfileInfo">Настройки профиля</a></li>
+            @if (this.ViewBag.IsAdmin == true)
+            {
+                <li><a class="dropdown-item overflow-hidden p-0 py-1" asp-page="/AdminPages/SupportSettings">Панель администратора</a></li>
+            }
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" asp-route="logout">Выйти из профиля</a></li>
+            <li><a class="dropdown-item text-danger overflow-hidden p-0 py-1" asp-route="logout">Выйти из профиля</a></li>
         </ul>
 
     </div>

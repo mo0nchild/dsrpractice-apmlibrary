@@ -1,66 +1,42 @@
-﻿using APMLibrary.Web.ViewModels;
+﻿using APMLibrary.Bll.Requests.BookRequests;
+using APMLibrary.Web.Configurations;
+using APMLibrary.Web.ViewModels.ComponentsViewModels;
+using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.Extensions.Options;
 
 namespace APMLibrary.Web.ViewComponents
 {
+    public partial class CatalogComponentParameter : object
+    {
+        public string Title { get; set; } = default!;
+        public string RedirectLink { get; set; } = default!;
+        public GetBooksListRequest Request { get; set; } = default!;
+    }
+
     [ViewComponent]
     public partial class CatalogViewComponent : ViewComponent
     {
-        public CatalogViewComponent() : base() { }
-
-        public virtual async Task<IViewComponentResult> InvokeAsync(string title, string href)
+        protected readonly IMediator mediator = default!;
+        protected readonly IMapper mapper = default!;
+        public CatalogViewComponent(IMapper mapper, IMediator mediator) : base() 
         {
-            this.ViewBag.RedirectLink = href;
-            this.ViewBag.CatalogTitle = title;
-            var viewModel = new BookCatalogViewModel() 
+            this.mediator = mediator;
+            this.mapper = mapper;
+        }
+        public virtual async Task<IViewComponentResult> InvokeAsync(CatalogComponentParameter param)
+        {
+            this.ViewBag.RedirectLink = param.RedirectLink;
+            var requestResult = await this.mediator.Send(param.Request);
+
+            return this.View(new BookCatalogViewModel()
             {
-                Items = new List<CatalogItemViewModel>()
-                {
-                    new ()
-                    {
-                        FirstLine = "Название книги 1",
-                        LastLine = "Имя автора 1",
-                    },
-                    new ()
-                    {
-                        FirstLine = "Название книги 2",
-                        LastLine = "Имя автора 2",
-                        Rating = 4.5,
-                    },
-                    new ()
-                    {
-                        FirstLine = "Название книги 2",
-                        LastLine = "Имя автора 2",
-                        Rating = 4.5,
-                    },
-                    new ()
-                    {
-                        FirstLine = "Название книги 1",
-                        LastLine = "Имя автора 1",
-                        Rating = 3.5,
-                    },
-                    new ()
-                    {
-                        FirstLine = "Название книги 2",
-                        LastLine = "Имя автора 2",
-                        Rating = 4.5,
-                    },
-                    new ()
-                    {
-                        FirstLine = "Название книги 1",
-                        LastLine = "Имя автора 1",
-                        Rating = 3.5,
-                    },
-                    new ()
-                    {
-                        FirstLine = "Название книги 2",
-                        LastLine = "Имя автора 2",
-                        Rating = 4.5,
-                    },
-                }
-            };
-            return this.View(viewModel);
+                AllCount = requestResult.AllBooksCount,
+                Name = param.Title,
+                Items = this.mapper.Map<IEnumerable<CatalogItemViewModel>>(requestResult.Books),
+            });
         }
 
     }

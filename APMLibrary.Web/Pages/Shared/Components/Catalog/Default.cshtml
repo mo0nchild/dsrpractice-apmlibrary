@@ -1,4 +1,6 @@
-﻿@model APMLibrary.Web.ViewModels.BookCatalogViewModel
+﻿@using APMLibrary.Web.ViewModels;
+@using APMLibrary.Web.ViewModels.ComponentsViewModels;
+@model BookCatalogViewModel
 @{
 }
 <div class="bg-white custom-bg-white p-3">
@@ -6,7 +8,7 @@
         <div class="d-flex flex-row justify-content-between">
 
             <div class="">
-                <h2 class="fs-5 mb-1 fw-bolder">@this.ViewBag.CatalogTitle</h2>
+                <h2 class="fs-5 mb-1 fw-bolder">@this.Model.Name</h2>
                 <p class="m-0" style="font-size: 14px;">@this.Model.AllCount публикаций</p>
             </div>
 
@@ -16,26 +18,32 @@
 
     <div class="row flex-nowrap mb-2 px-2">
         <div id="container-scroll" class="d-flex flex-row flex-nowrap p-2" style="overflow-x: auto;">
-            @foreach (var item in this.Model.Items)
+            @if (this.Model.Items == null || this.Model.Items.Count() <= 0)
             {
-                var imageUrl = (item.Image == null ? "/img/nobookcover.png" : $"data:image;base64,{Convert.ToBase64String(item.Image)}");
-                <a href="#" class="card mx-2 text-decoration-none flex-shrink-0" style="width: 10rem; color: #000;">
-                    <img src="@imageUrl" class="card-img-top card-img-catalog" alt="...">
+                <p class="text-center w-100 fs-5">Публикации отсутствуют</p>
+            }
+            else
+            {
+                @foreach (var item in this.Model.Items)
+                {
+                    var imageUrl = (item.Image == null ? "/img/nobookcover.png" : $"data:image;base64,{Convert.ToBase64String(item.Image)}");
+                    var bookUrl = this.Url.Page("/LibraryPages/BookInfo", new { BookId = item.Id });
 
-                    <div class="card-body py-2">
-                        @if(item.Rating != null)
-                        {
+                    <a href="@bookUrl" class="card mx-2 text-decoration-none flex-shrink-0" style="width: 10rem; color: #000;">
+                        <img src="@imageUrl" class="card-img-top card-img-catalog" alt="...">
+
+                        <div class="card-body py-2">
                             <div class="">
                                 @for (var count = 0; count < 5; count++)
                                 {
                                     <span class="fa fa-star @((item.Rating < count + 1) ? "" : "checked-star")"></span>
                                 }
                             </div>
-                        }
-                        <p class="card-text m-0 overflow-hidden text-nowrap" style="font-size: 16px;">@item.FirstLine</p>
-                        <p class="card-text text-secondary overflow-hidden text-nowrap" style="font-size: 14px;">@item.LastLine</p>
-                    </div>
-                </a>
+                            <p class="card-text m-0 overflow-hidden text-nowrap" style="font-size: 16px;">@item.FirstLine</p>
+                            <p class="card-text text-secondary overflow-hidden text-nowrap" style="font-size: 14px;">@item.LastLine</p>
+                        </div>
+                    </a>
+                }
             }
         </div>
     </div>

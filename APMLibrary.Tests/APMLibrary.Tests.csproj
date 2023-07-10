@@ -10,7 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,8 +27,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DalTests\Requests\" />
     <Folder Include="WebTests\" />
-    <Folder Include="DalTests\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\APMLibrary.Bll\APMLibrary.Bll.csproj" />
+    <ProjectReference Include="..\APMLibrary.Dal\APMLibrary.Dal.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,6 @@
     {
         var transferData = new Dictionary<string, string?>()
         {
-            { "ForSubscriber", this.Model.FilterModel.ForSubscriber.ToString() },
             { "Language", this.Model.FilterModel.Language?.ToString() },
             { "OrderType", this.Model.FilterModel.OrderType.ToString() },
 
@@ -24,25 +23,17 @@
         </div>
     }
 }
-@section Supports {
-    <li class="nav-item">
-        <a href="#" class="nav-link px-3 link-secondary border-bottom border-secondary border-3">Библиотека</a>
-    </li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Закладки</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Подписка</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-3 link-dark">Помощь</a></li>
-}
 @{
     await this.Html.RenderPartialAsync("SectionsPartial");
     await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
     {
-        { "Главная", "/Index" }, { "Библитека", "/LibraryPages/FullCatalog" },
-        { this.Model.CategoryGenre ?? "Все книги", null }
+        { "Главная", "/Index" }, { "Библитека", "/LibraryPages/LibraryCatalog" },
+        { this.Model.CategoryGenre ?? "Все публикации", null }
     });
 }
 
 <div class="row w-100 mb-3">
-    <h1 class="fs-2 fw-bolder ">@(this.ViewData["ListName"] ?? "Список публикаций")</h1>
+    <h1 class="fs-2 fw-bolder ">Список публикаций</h1>
     <p class="form-label">@this.Model.Catalog.AllCount изданий найдено</p>
 </div>
 
@@ -51,15 +42,12 @@
     <div class="col-12 col-lg-8 order-1 order-lg-0">
 
         <div class="row mb-4">
-
             <div class="col-12">
                 <div class="bg-white w-100 custom-bg-white p-3">
 
                     <h2 class="fs-5 fw-bolder mb-4">Поиск издания по названию</h2>
-
                     <form class="d-flex flex-row" method="get" asp-page="ListCatalog" asp-page-handler="">
 
-                        <input type="hidden" asp-for="@this.Model.FilterModel.ForSubscriber" />
                         <input type="hidden" asp-for="@this.Model.FilterModel.OrderType" />
                         <input type="hidden" asp-for="@this.Model.FilterModel.Language" />
 
@@ -73,27 +61,33 @@
             </div>
 
         </div>
-
+        @if (this.Model.Catalog.Items.Count() <= 0)
+        {
+            <div class="my-5 p-3">
+                <p class="fs-4 w-100 text-center">Список публикаций пуст</p>
+            </div>
+        }
         @foreach(var item in this.Model.Catalog.Items)
         {
             var imageUrl = (item.Image == null ? "/img/nobookcover.png" : $"data:image;base64,{Convert.ToBase64String(item.Image)}");
+            var bookUrl = this.Url.Page("/LibraryPages/BookInfo", new { BookId = item.Id });
             <div class="row mb-4">
 
                 <div class="col-12">
                     <div class="bg-white d-flex flex-row custom-bg-white p-3" style="max-height: 200px;">
 
-                        <a class="text-decoration-none mx-2" href="#">
+                        <a class="text-decoration-none mx-2" href="@bookUrl">
                             <img src="@imageUrl" alt="..." class="card-img-catalog border border-secondary"
                                  style="width: 10rem; border-radius: 10px;" />
                         </a>
-                        <div class="mx-2 flex-grow-1">
+                        <div class="mx-2 flex-grow-1 overflow-hidden ">
 
-                            <a href="#" class="text-decoration-none text-black overflow-hidden text-nowrap fw-bolder mb-2" 
-                                style="font-size: 16px;"> @item.FirstLine </a>
+                            <a href="@bookUrl" class="text-decoration-none text-black fw-bolder mb-2"
+                               style="font-size: 16px;"> @item.FirstLine </a>
 
                             <div class="row">
                                 <div class="col-12 col-md-4 col-lg-4 col-xl-3">
-                                    <p class="text-primary m-0 text-nowrap overflow-hidden" style="font-size: 14px;"> @item.LastLine </p>
+                                    <p class="text-primary m-0 overflow-hidden" style="font-size: 14px;"> @item.LastLine </p>
                                 </div>
                                 <div class="col-12 col-md-4 col-lg-4 col-xl-3">
                                     <span class="text-primary" style="font-size: 14px;">@item.PageCount страниц</span>
@@ -107,23 +101,13 @@
                                         <span class="fa fa-star @((item.Rating < count + 1) ? "" : "checked-star")"></span>
                                     }
                                 </div>
-
                                 <div class="col-12 col-md-4 col-lg-4 col-xl-3">
                                     <span style="font-size: 14px;">Оценка: @($"{@item.Rating:F2}")</span>
                                 </div>
-
-                                <div class="col-12 col-md-4 col-lg-4 col-xl-3">
-                                    @if (item.ForSubscriber)
-                                    {
-                                        <span style="font-size: 14px;"><i class="bi bi-clipboard2-check"></i>По подписке</span>
-                                    }
-                                    else
-                                    {
-                                        <span style="font-size: 14px;"><i class="bi bi-clipboard-minus"></i>&nbsp;&nbsp;Бесплатно</span>
-                                    }
-                                </div>
                             </div>
-                            <div class="d-none d-md-block overflow-hidden" style="font-size:14px; max-height:80px;"> @item.Description </div>
+                            <div class="d-none d-md-inline-block" style="max-height:80px; font-size:14px;">
+                                <p class="w-100 text-wrap" style="overflow-wrap:anywhere;">@item.Description</p>
+                            </div>
                         </div>
                     </div>
                 </div>
