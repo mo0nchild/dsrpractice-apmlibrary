@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["APMLibraryClient/APMLibraryClient.csproj", "APMLibraryClient/"]
-RUN dotnet restore "APMLibraryClient/APMLibraryClient.csproj"
+COPY ["APMLibrary.Web/APMLibrary.Web.csproj", "APMLibrary.Web/"]
+RUN dotnet restore "APMLibrary.Web/APMLibrary.Web.csproj"
 COPY . .
-WORKDIR "/src/APMLibraryClient"
-RUN dotnet build "APMLibraryClient.csproj" -c Release -o /app/build
+WORKDIR "/src/APMLibrary.Web"
+RUN dotnet build "APMLibrary.Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "APMLibraryClient.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "APMLibrary.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "APMLibraryClient.dll"]
+ENTRYPOINT ["dotnet", "APMLibrary.Web.dll"]
