@@ -22,11 +22,10 @@ namespace APMLibrary.Dal.Configurations
 
             builder.HasOne(item => item.Language).WithMany(item => item.Publications)
                 .HasForeignKey(item => item.LanguageId).HasPrincipalKey(item => item.Id);
-            builder.HasOne(item => item.BookCover).WithMany(item => item.Publications)
-                .HasForeignKey(item => item.BookCoverId).HasPrincipalKey(item => item.Id);
 
             builder.HasOne(item => item.Publisher).WithMany(item => item.Publications)
                 .HasForeignKey(item => item.PublisherId).HasPrincipalKey(item => item.Id);
+
             builder.HasOne(item => item.PublicationType).WithMany(item => item.Publications)
                 .HasForeignKey(item => item.PublicationTypeId).HasPrincipalKey(item => item.Id);
         }

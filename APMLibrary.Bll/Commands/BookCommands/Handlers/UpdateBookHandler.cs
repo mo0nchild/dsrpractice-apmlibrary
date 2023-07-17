@@ -24,7 +24,8 @@ namespace APMLibrary.Bll.Commands.BookCommands.Handler
         {
             using (var dbcontext = await this._dbcontextFactory.CreateDbContextAsync(cancellationToken))
             {
-                var publish = await dbcontext.Publications.FirstOrDefaultAsync(item => item.Id == request.BookId);
+                var publish = await dbcontext.Publications.Include(item => item.Genres)
+                    .FirstOrDefaultAsync(item => item.Id == request.BookId);
                 if (publish == null)
                 {
                     throw new NotFoundException("Запись о публикации не найдена", request.BookId);
@@ -35,10 +36,10 @@ namespace APMLibrary.Bll.Commands.BookCommands.Handler
                 publish.Description = request.Description;
 
                 var language = await dbcontext.Languages.FirstOrDefaultAsync(item => item.Name == request.Language);
-                if (language == null) throw new CreateBookException("Язык перевода не найден");
+                if (language == null) throw new NotFoundException("Язык перевода не найден");
 
                 var publishType = await dbcontext.PublicationTypes.FirstOrDefaultAsync(item => item.Name == request.PublishType);
-                if (publishType == null) throw new CreateBookException("Тип публикации не найден");
+                if (publishType == null) throw new NotFoundException("Тип публикации не найден");
 
                 publish.LanguageId = language.Id;
                 publish.PublicationTypeId = publishType.Id;
@@ -51,7 +52,7 @@ namespace APMLibrary.Bll.Commands.BookCommands.Handler
                 }
                 if (publish.Genres == null || publish.Genres.Count <= 0)
                 {
-                    throw new CreateBookException("Не установлен список жанров и категорий");
+                    throw new NotFoundException("Не установлен список жанров и категорий");
                 }
                 await dbcontext.SaveChangesAsync(cancellationToken);
             }

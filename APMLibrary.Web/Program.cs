@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using APMLibrary.Web.Middlewares;
 using APMLibrary.Web.Configurations;
-using APMLibrary.Bll.Models;
+using APMLibrary.Bll.Models.ProfileModels;
 
 namespace APMLibrary.Web
 {

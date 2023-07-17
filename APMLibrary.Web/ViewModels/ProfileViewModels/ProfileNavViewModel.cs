@@ -1,5 +1,5 @@
 ﻿using APMLibrary.Bll.Common.Mappings;
-using APMLibrary.Bll.Models;
+using APMLibrary.Bll.Models.ProfileModels;
 using AutoMapper;
 
 namespace APMLibrary.Web.ViewModels.ProfileViewModels

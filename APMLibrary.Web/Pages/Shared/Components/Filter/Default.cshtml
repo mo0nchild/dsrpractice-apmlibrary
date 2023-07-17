@@ -13,6 +13,7 @@
         <form id="filter-form" method="get" asp-page="@this.ViewBag.Page" asp-page-handler="@(this.ViewBag.Handler)">
 
             <input type="hidden" asp-for="@this.Model.SearchingText" />
+            <input type="hidden" asp-for="@this.Model.CategoryGenre" />
 
             <div class="row mb-4">
 

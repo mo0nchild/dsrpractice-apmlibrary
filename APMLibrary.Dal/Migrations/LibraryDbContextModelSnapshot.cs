@@ -60,25 +60,6 @@ namespace APMLibrary.Dal.Migrations
                     b.ToTable("Authorizations");
                 });
 
-            modelBuilder.Entity("APMLibrary.Dal.Entities.BookCover", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<byte[]>("BackCover")
-                        .HasColumnType("bytea");
-
-                    b.Property<byte[]>("FrontCover")
-                        .HasColumnType("bytea");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BookCovers");
-                });
-
             modelBuilder.Entity("APMLibrary.Dal.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -200,11 +181,11 @@ namespace APMLibrary.Dal.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<int>("BookCoverId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("bytea");
 
                     b.Property<int>("LanguageId")
                         .HasColumnType("integer");
@@ -230,8 +211,6 @@ namespace APMLibrary.Dal.Migrations
                         .HasColumnType("date");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookCoverId");
 
                     b.HasIndex("Id")
                         .IsUnique();
@@ -307,8 +286,8 @@ namespace APMLibrary.Dal.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
-                    b.Property<DateOnly>("DateOnly")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("DateOnly")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("PublicationId")
                         .HasColumnType("integer");
@@ -388,12 +367,6 @@ namespace APMLibrary.Dal.Migrations
 
             modelBuilder.Entity("APMLibrary.Dal.Entities.Publication", b =>
                 {
-                    b.HasOne("APMLibrary.Dal.Entities.BookCover", "BookCover")
-                        .WithMany("Publications")
-                        .HasForeignKey("BookCoverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("APMLibrary.Dal.Entities.Language", "Language")
                         .WithMany("Publications")
                         .HasForeignKey("LanguageId")
@@ -411,8 +384,6 @@ namespace APMLibrary.Dal.Migrations
                         .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("BookCover");
 
                     b.Navigation("Language");
 
@@ -487,11 +458,6 @@ namespace APMLibrary.Dal.Migrations
                         .HasForeignKey("PublicationsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("APMLibrary.Dal.Entities.BookCover", b =>
-                {
-                    b.Navigation("Publications");
                 });
 
             modelBuilder.Entity("APMLibrary.Dal.Entities.Category", b =>

@@ -6,13 +6,70 @@
     <div class="row mb-3">
 
         <div class="col-12 mb-3">
-            <a asp-page="/AdminPages/SupportSettings" class="btn btn-outline-dark w-100">Справочники</a>
+            <a asp-page="/AdminPages/PublishSettings" class="btn btn-outline-dark w-100">Проверка публикации</a>
         </div>
         <div class="col-12 mb-3">
-            <a asp-page="/AdminPages/SupportSettings" class="btn btn-outline-dark w-100">Пользователи</a>
+            <a asp-page="/AdminPages/SupportSettings" class="btn btn-outline-dark w-100">Настройка справочников</a>
         </div>
         <div class="col-12 mb-3">
-            <a asp-page="/AdminPages/SupportSettings" class="btn btn-outline-dark w-100">Публикации</a>
+            <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#backup-modal">
+                Восстановление БД
+            </button>
+            <div class="modal fade" id="backup-modal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Восстановление базы данных</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-4">
+
+                                <div class="col-12">
+                                    <a class="btn btn-outline-dark w-100" asp-route="backup">Сохранить в файл</a>
+                                </div>
+
+                            </div>
+                            <hr />
+                            <form class="row g-3" method="post" asp-route="restore" asp-antiforgery="true" enctype="multipart/form-data">
+
+                                <div class="col-12">
+                                    <input type="file" accept="text/xml" name="file" class="form-control" required />
+                                </div>
+
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#submit-modal">
+                                        Загрузить из файла
+                                    </button>
+
+                                    <div class="modal" tabindex="-1" id="submit-modal">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Подтверждение</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Вы согласны перезаписать базу данных?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Назад</button>
+                                                    <input type="submit" class="btn btn-dark" value="Подтвердить" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -22,9 +22,10 @@
                 <span class="dropdown-item disabled overflow-hidden p-0 py-1"> @this.Model.Name&nbsp;@this.Model.Surname </span>
             </li>
             <li><a class="dropdown-item overflow-hidden p-0 py-1" asp-page="/ProfilePages/ProfileInfo">Настройки профиля</a></li>
+            <li><a class="dropdown-item overflow-hidden p-0 py-1" asp-page="/ProfilePages/Bookmarks">Сохраненные книги</a></li>
             @if (this.ViewBag.IsAdmin == true)
             {
-                <li><a class="dropdown-item overflow-hidden p-0 py-1" asp-page="/AdminPages/SupportSettings">Панель администратора</a></li>
+                <li><a class="dropdown-item overflow-hidden p-0 py-1" asp-page="/AdminPages/PublishSettings">Панель администратора</a></li>
             }
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger overflow-hidden p-0 py-1" asp-route="logout">Выйти из профиля</a></li>

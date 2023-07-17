@@ -1,4 +1,4 @@
-﻿using APMLibrary.Bll.Models;
+﻿using APMLibrary.Bll.Models.SupportModels;
 using APMLibrary.Dal;
 using AutoMapper;
 using MediatR;

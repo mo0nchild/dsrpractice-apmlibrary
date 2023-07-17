@@ -1,0 +1,175 @@
+﻿@page "/publisher/editbook"
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
+@using System.Globalization;
+@model APMLibrary.Web.Pages.PublisherPages.EditBookModel
+@{
+    this.ViewData["Title"] = "Редактирование издания";
+    bool CheckValidation(string name) => this.ModelState[name] == null
+        || this.ModelState[name]?.ValidationState == ModelValidationState.Valid;
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Издательство", "/PublisherPages/PublisherInfo" }, { "Редактирование", null }
+    });
+}
+<div class="row w-100 mb-5 justify-content-center">
+
+    @if (!this.ModelState.IsValid)
+    {
+        await this.Html.RenderPartialAsync("AlertPartial", "Неверно введены данные формы публикации");
+    }
+    <div class="col-12 col-md-8 bg-white custom-bg-white p-4" style="border-radius: 10px;">
+
+        <h1 class="fs-3 fw-bolder mb-3">Изменение публикации</h1>
+        <div class="form-text mb-2 text-danger" style="font-size: 16px;" asp-validation-summary="ModelOnly"></div>
+
+        <form class="needs-validation" method="post" asp-page="EditBook" asp-antiforgery="true">
+            <input type="hidden" asp-for="Publication.BookId" value="@this.Model.BookId" />
+            <div class="row mb-4">
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Название публикации:</label>
+                    <input asp-for="Publication.Title" class="form-control @(CheckValidation("BookModel.Title") ? "" : "is-invalid")"
+                           type="text" maxlength="100" placeholder="Введите название для вашей публикации" required>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Publication.Title"></span>
+
+                    <div id="passwordHelpBlock" class="form-text">Длина значения поля от 5 до 50 символов </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Автор публикации:</label>
+                    <input asp-for="Publication.AuthorName" class="form-control @(CheckValidation("BookModel.AuthorName") ? "" : "is-invalid")"
+                           type="text" maxlength="50" placeholder="Введите автора публикации" required>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Publication.AuthorName"></span>
+
+                    <div id="passwordHelpBlock" class="form-text"> Длина значения поля от 5 до 50 символов </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Дата издания:</label>
+                    <input asp-for="Publication.YearIssue" type="date" id="date-input"
+                           class="form-control @(CheckValidation("BookModel.YearIssue") ? "" : "is-invalid")" required>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Publication.YearIssue"></span>
+                </div>
+
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12 col-md-6">
+
+                    <label class="form-label">Тип публикации:</label>
+                    @{
+                        var publicationTypesList = new SelectList(this.Model.BookTypes.Select(item => item.Name).ToList());
+                    }
+                    <select class="form-select" asp-for="Publication.PublishType" asp-items="@publicationTypesList"></select>
+                </div>
+                <div class="col-12 col-md-6">
+
+                    <label class="form-label">Язык содержимого:</label>
+                    @{
+                        var languagesList = new SelectList(this.Model.Languages.Select(item => item.Name).ToList());
+                    }
+                    <select class="form-select" asp-for="Publication.Language" asp-items="@languagesList"></select>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12 col-md-6">
+                    @{
+                        var genresList = this.Model.Genres.Select(item => item.Name).ToList();
+                    }
+                    <label class="form-label">Жанр публикации:</label>
+                    <ul class="list-group" style="overflow-y: scroll; max-height: 100px;">
+                        @for (var index = 0; index < genresList.Count; index++)
+                        {
+                            var item = genresList[index];
+                            var isCheck = this.Model.Publication.Genres?.FirstOrDefault(p => p == item) != null;
+
+                            <li class="list-group-item" style="cursor: pointer" onclick="changeChecker(event, '@($"form-check{index}")')">
+                                <div class="form-check form-switch d-flex flex-row justify-content-between p-0">
+
+                                    <label class="form-check-label">@item</label>
+                                    @if (isCheck)
+                                    {
+                                        <input name="Publication.Genres" id="@($"form-check{index}")" class="form-check-input" checked type="checkbox" value="@item">
+                                    }
+                                    else
+                                    {
+                                        <input name="Publication.Genres" id="@($"form-check{index}")" class="form-check-input" type="checkbox" value="@item">
+                                    }
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Publication.Genres"></span>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12">
+                    <label class="form-label">Краткое описание публикации:</label>
+                    <textarea class="form-control @(CheckValidation("BookModel.Description") ? "" : "is-invalid")" asp-for="Publication.Description"
+                              type="text" maxlength="500" rows="4" required style="resize:vertical; max-height:150px;"></textarea>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="Publication.Description"></span>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-6 mb-3">
+                    <input class="btn btn-outline-dark w-100" type="submit" value="Обновить публикацию" />
+                </div>
+                <div class=" col-12 col-md-6 mb-3">
+                    <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Удалить публикацию
+                    </button>
+
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Удаление публикации</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    При подтверждении публикация будет удалена из системы. Вы уверены в этом?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Назад</button>
+                                    <a class="btn btn-dark" asp-page="EditBook" asp-route-BookId="@this.Model.BookId" 
+                                        asp-page-handler="Delete">Подтвердить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $('#date-input').val('@this.Model.Publication.YearIssue.ToString("yyyy-MM-dd")');
+        })
+
+        const changeChecker = function (event, item) {
+            var checkbox = $(`#${item}`);
+            checkbox.prop('checked', checkbox.prop('checked') == true ? false : true);
+        }
+
+        const loadFile = function (event, output) {
+            var output = document.getElementById(output);
+            output.src = URL.createObjectURL(event.target.files[0]);
+
+            output.onload = () => {
+                URL.revokeObjectURL(output.src);
+            }
+        };
+
+    </script>
+
+}

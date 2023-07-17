@@ -12,7 +12,7 @@
             { "Language", this.Model.FilterModel.Language?.ToString() },
             { "OrderType", this.Model.FilterModel.OrderType.ToString() },
 
-            { "CategoryGenre", this.Model.CategoryGenre?.ToString() },
+            { "CategoryGenre", this.Model.FilterModel.CategoryGenre?.ToString() },
             { "CurrentPage", page.ToString() },
             { "SearchingText", this.Model.FilterModel.SearchingText?.ToString() },
         };
@@ -28,7 +28,7 @@
     await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
     {
         { "Главная", "/Index" }, { "Библитека", "/LibraryPages/LibraryCatalog" },
-        { this.Model.CategoryGenre ?? "Все публикации", null }
+        { this.Model.FilterModel.CategoryGenre ?? "Все публикации", null }
     });
 }
 
@@ -50,6 +50,7 @@
 
                         <input type="hidden" asp-for="@this.Model.FilterModel.OrderType" />
                         <input type="hidden" asp-for="@this.Model.FilterModel.Language" />
+                        <input type="hidden" asp-for="@this.Model.FilterModel.CategoryGenre" />
 
                         <input asp-for="@this.Model.FilterModel.SearchingText" type="text" class="form-control flex-grow-1 mx-2" 
                             placeholder="Введите название издания" maxlength="50"/>

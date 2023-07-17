@@ -1,5 +1,5 @@
 ﻿using APMLibrary.Bll.Common.Mappings;
-using APMLibrary.Bll.Models;
+using APMLibrary.Bll.Models.ProfileModels;
 using APMLibrary.Web.ViewModels.ComponentsViewModels;
 using Microsoft.Extensions.Options;
 

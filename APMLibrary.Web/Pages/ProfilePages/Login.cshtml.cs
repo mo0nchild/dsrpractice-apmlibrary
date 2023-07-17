@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
-using APMLibrary.Bll.Models;
 using APMLibrary.Web.ViewModels.ProfileViewModels;
 using APMLibrary.Bll.Requests.ProfileRequests;
+using APMLibrary.Bll.Models.ProfileModels;
 
 namespace APMLibrary.Web.Pages.ProfilePages
 {

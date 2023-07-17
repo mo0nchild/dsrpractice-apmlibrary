@@ -1,5 +1,5 @@
 ﻿using APMLibrary.Bll.Common.Mappings;
-using APMLibrary.Bll.Models;
+using APMLibrary.Bll.Models.BookModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace APMLibrary.Web.ViewModels.ComponentsViewModels
@@ -7,6 +7,7 @@ namespace APMLibrary.Web.ViewModels.ComponentsViewModels
     public partial class CatalogItemViewModel : IValidatableObject, IMappingWith<BookDto>
     {
         public int Id { get; set; } = default!;
+        public bool Published { get; set; } = default!;
 
         [Required(ErrorMessage = "Не установлено значение строки")]
         public string FirstLine { get; set; } = default!;
@@ -38,11 +39,13 @@ namespace APMLibrary.Web.ViewModels.ComponentsViewModels
             });
             profile.CreateMap<BookDto, CatalogItemViewModel>()
                 .ForMember(item => item.Id, options => options.MapFrom(item => item.Id))
+                .ForMember(item => item.Published, options => options.MapFrom(item => item.Published))
+
                 .ForMember(item => item.FirstLine, options => options.MapFrom(item => item.Title))
                 .ForMember(item => item.LastLine, options => options.MapFrom(item => item.AuthorName))
                 .ForMember(item => item.Rating, options => options.MapFrom(item => item.Ratings))
 
-                .ForMember(item => item.Image, options => options.MapFrom(item => item.FrontCover))
+                .ForMember(item => item.Image, options => options.MapFrom(item => item.Image))
                 .ForMember(item => item.PageCount, options => options.MapFrom(item => item.NumberPages))
                 .ForMember(item => item.Description, options => options.MapFrom(item => item.Description));
         }

@@ -25,6 +25,7 @@ namespace APMLibrary.Web.ViewModels.ComponentsViewModels
         [Required(ErrorMessage = "Не установлено значение языка перевода")]
         public string? Language { get; set; } = default!;
         public string? SearchingText { get; set; } = default!;
+        public string? CategoryGenre { get; set; } = default!;
         public OrderType OrderType { get; set; } = default!;
 
         public virtual void ConfigureMapping(Profile profile)

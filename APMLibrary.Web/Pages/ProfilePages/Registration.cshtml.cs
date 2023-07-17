@@ -1,6 +1,6 @@
 using APMLibrary.Bll.Commands.ProfileCommands;
 using APMLibrary.Bll.Common.Exceptions;
-using APMLibrary.Bll.Models;
+using APMLibrary.Bll.Models.ProfileModels;
 using APMLibrary.Web.ViewModels.ProfileViewModels;
 using AutoMapper;
 using MediatR;

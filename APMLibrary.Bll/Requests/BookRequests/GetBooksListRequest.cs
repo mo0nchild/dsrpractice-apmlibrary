@@ -1,4 +1,4 @@
-﻿using APMLibrary.Bll.Models;
+﻿using APMLibrary.Bll.Models.BookModels;
 using MediatR;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System;

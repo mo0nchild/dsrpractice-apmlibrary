@@ -1,4 +1,5 @@
-﻿@model APMLibrary.Web.ViewModels.BookViewModels.BookInfoViewModel
+﻿@using System.Globalization;
+@model APMLibrary.Web.ViewModels.BookViewModels.BookInfoViewModel
 @{
     var imageUrl = (this.Model.Image == null ? "/img/nobookcover.png"
         : $"data:image;base64,{Convert.ToBase64String(this.Model.Image)}");
@@ -52,7 +53,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Дата создания:</label>
-                        <input class="form-control bg-white" value="@this.Model.Date" disabled />
+                        <input class="form-control bg-white" value="@this.Model.Date.ToString("o", CultureInfo.InvariantCulture)" disabled />
                     </div>
                     
                 </div>
@@ -80,7 +81,8 @@
             <div class="row w-100 mb-4">
                 <div class="col-12 col-md-4 mb-3">
                     <h2 class="fs-5 fw-bolder mb-3">Издатель:</h2>
-                    <a class="btn btn-outline-secondary p-1 d-flex flex-row align-items-center">
+                    <a class="btn btn-outline-secondary p-1 d-flex flex-row align-items-center" 
+                        asp-page="/LibraryPages/PublisherCatalog" asp-route-PublisherId="@this.Model.Publisher.Id">
                         @{
                             var publisherImage = (this.Model.Publisher.Image == null ? "/img/noprofileimage.png"
                             : $"data:image;base64,{Convert.ToBase64String(this.Model.Publisher.Image)}");

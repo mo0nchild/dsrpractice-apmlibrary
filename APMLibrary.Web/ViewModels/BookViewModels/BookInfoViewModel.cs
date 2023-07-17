@@ -1,5 +1,5 @@
 ﻿using APMLibrary.Bll.Common.Mappings;
-using APMLibrary.Bll.Models;
+using APMLibrary.Bll.Models.BookModels;
 using APMLibrary.Web.ViewModels.SupportViewModels;
 using Microsoft.AspNetCore.Razor.Hosting;
 using Org.BouncyCastle.Crypto.Paddings;
@@ -22,6 +22,8 @@ namespace APMLibrary.Web.ViewModels.BookViewModels
         public string BookType { get; set; } = default!;
         public string Language { get; set; } = default!;
 
+        public bool IsPublished { get; set; } = default!;
+
         public List<GenreViewModel> Genres { get; set; } = default!;
         public PublisherViewModel Publisher { get; set; } = default!;
 
@@ -34,6 +36,7 @@ namespace APMLibrary.Web.ViewModels.BookViewModels
             profile.CreateMap<BookDto, BookInfoViewModel>()
                 .ForMember(item => item.Id, options => options.MapFrom(item => item.Id))
                 .ForMember(item => item.VenderCode, options => options.MapFrom(item => item.VenderCode))
+                .ForMember(item => item.IsPublished, options => options.MapFrom(item => item.Published))
                 .ForMember(item => item.Title, options => options.MapFrom(item => item.Title))
                 .ForMember(item => item.AuthorName, options => options.MapFrom(item => item.AuthorName))
 
@@ -45,7 +48,7 @@ namespace APMLibrary.Web.ViewModels.BookViewModels
                 .ForMember(item => item.BookType, options => options.MapFrom(item => item.PublicationType))
                 .ForMember(item => item.Language, options => options.MapFrom(item => item.Language))
                 .ForMember(item => item.Genres, options => options.MapFrom(item => item.Genres))
-                .ForMember(item => item.Image, options => options.MapFrom(item => item.FrontCover))
+                .ForMember(item => item.Image, options => options.MapFrom(item => item.Image))
 
                 .ForMember(item => item.Publisher, options => options.MapFrom(item => item.Publisher));
         }

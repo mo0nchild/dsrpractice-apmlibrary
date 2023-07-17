@@ -12,7 +12,7 @@
         };
         <div class="page-item @((isDisabled ? "disabled" : ""))">
 
-            <a class="page-link" asp-page="ListCatalog" asp-all-route-data="@transferData">@text</a>
+            <a class="page-link" asp-page="ListRatings" asp-all-route-data="@transferData">@text</a>
 
         </div>
     }
@@ -32,48 +32,57 @@
     </h1>
 
     <div class="col-12 col-md-10 col-lg-8">
-
-        @foreach(var item in this.Model.Ratings)
+        @if(this.Model.Ratings == null || this.Model.Ratings.Count() <= 0)
         {
-            <div class="row w-100 mb-4">
-                <div class="col-12">
+            <div class="my-5 p-3">
+                <p class="fs-4 w-100 text-center">Список комментариев пока пуст</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in this.Model.Ratings)
+            {
+                <div class="row w-100 mb-4">
+                    <div class="col-12">
 
-                    <div class="bg-white custom-bg-white p-4 overflow-hidden">
-                        <div class="d-flex flex-row align-items-center">
-                            @{
-                                var publisherImage = (item.Reader.Image == null ? "/img/noprofileimage.png"
+                        <div class="bg-white custom-bg-white p-4 overflow-hidden">
+                            <div class="d-flex flex-row align-items-center">
+                                @{
+                                    var publisherImage = (item.Reader.Image == null ? "/img/noprofileimage.png"
                                     : $"data:image;base64,{Convert.ToBase64String(item.Reader.Image)}");
-                            }
-                            <img src="@publisherImage" alt="..." class="border border-secondary"
-                                 style="width: 40px; height: 40px; border-radius: 10px; object-fit: contain;" />
+                                }
+                                <img src="@publisherImage" alt="..." class="border border-secondary"
+                                     style="width: 40px; height: 40px; border-radius: 10px; object-fit: contain;" />
 
-                            <div class="mx-2">
-                                <p class="m-0" style="">@item.Reader.Name @item.Reader.Surname</p>
-                                @for (var count = 0; count < 5; count++)
+                                <div class="mx-2">
+                                    <p class="m-0" style="">@item.Reader.Name @item.Reader.Surname</p>
+                                    @for (var count = 0; count < 5; count++)
+                                    {
+                                        <span class="fa fa-star @((item.Rating < count + 1) ? "" : "checked-star")"></span>
+                                    }
+                                </div>
+
+                            </div>
+                            <hr />
+                            <div class="mb-3">
+                                @if (item.Comment != null)
                                 {
-                                    <span class="fa fa-star @((item.Rating < count + 1) ? "" : "checked-star")"></span>
+                                    <label class="form-label">Комментарий пользователя:</label>
+                                    <textarea class="form-control bg-white" style="resize: none; overflow: auto;" rows="4" disabled>@item.Comment</textarea>
+                                }
+                                else
+                                {
+                                    <div class="">
+                                        <p class="fs-5 w-100 text-center">Отсутствует комментарий</p>
+                                    </div>
                                 }
                             </div>
-                            
+                            <label class="form-label">@item.DateTime</label>
                         </div>
-                        <hr />
-                        <div class="mb-3">
-                            @if(item.Comment != null)
-                            {
-                                <label class="form-label">Комментарий пользователя:</label>
-                                <textarea class="form-control bg-white" style="resize: none; overflow: auto;" rows="4" disabled>@item.Comment</textarea>
-                            }
-                            else
-                            {
-                                <div class="">
-                                    <p class="fs-5 w-100 text-center">Отсутствует комментарий</p>
-                                </div>
-                            }
-                        </div>
-                    </div>
 
+                    </div>
                 </div>
-            </div>
+            }
         }
         <div class="row mb-4 w-100">
             @{

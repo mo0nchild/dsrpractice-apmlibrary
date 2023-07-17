@@ -1,0 +1,194 @@
+﻿@page "/publisher/addbook"
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
+@model APMLibrary.Web.Pages.AuthorPages.AddBookModel
+@{
+    this.ViewData["Title"] = "Добавление публикации";
+
+    bool CheckValidation(string name) => this.ModelState[name] == null
+        || this.ModelState[name]?.ValidationState == ModelValidationState.Valid;
+}
+@section Styles {
+    <style type="text/css">
+
+        form img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        form textarea {
+            resize: vertical;
+            max-height: 150px;
+        }
+
+    </style>
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Издательство", "/PublisherPages/PublisherInfo" }, { "Публикация", null }
+    });
+}
+<div class="row w-100 mb-5">
+    @if (!this.ModelState.IsValid)
+    {
+        await this.Html.RenderPartialAsync("AlertPartial", "Неверно введены данные формы публикации");
+    }
+    <div class="col-12 w-100 bg-white custom-bg-white p-4" style="border-radius: 10px;">
+
+        <h1 class="fs-2 fw-bolder mb-3">Регистрация публикации</h1>
+        <div class="form-text mb-2 text-danger" style="font-size: 16px;" asp-validation-summary="ModelOnly"></div>
+
+        <form class="needs-validation" method="post" asp-page="AddBook" enctype="multipart/form-data" asp-antiforgery="true">
+            <input type="hidden" asp-for="@this.Model.BookModel.PublisherId" value="@this.Model.PublisherId" />
+            <div class="row mb-4">
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label class="form-label">Название публикации:</label>
+                    <input asp-for="BookModel.Title" class="form-control @(CheckValidation("BookModel.Title") ? "" : "is-invalid")"
+                           type="text" maxlength="100" placeholder="Введите название для вашей публикации" required>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="BookModel.Title"></span>
+
+                    <div id="passwordHelpBlock" class="form-text">Длина значения поля от 5 до 50 символов </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label class="form-label">Автор публикации:</label>
+                    <input asp-for="BookModel.AuthorName" class="form-control @(CheckValidation("BookModel.AuthorName") ? "" : "is-invalid")"
+                           type="text" maxlength="50" placeholder="Введите автора публикации" required>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="BookModel.AuthorName"></span>
+
+                    <div id="passwordHelpBlock" class="form-text"> Длина значения поля от 5 до 50 символов </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label class="form-label">Дата издания:</label>
+                    <input asp-for="BookModel.YearIssue" type="date" 
+                        class="form-control @(CheckValidation("BookModel.YearIssue") ? "" : "is-invalid")" required>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="BookModel.YearIssue"></span>
+                </div>
+
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <label class="form-label">Тип публикации:</label>
+                    @{
+                        var publicationTypesList = new SelectList(this.Model.BookTypes.Select(item => item.Name).ToList());
+                    }
+                    <select class="form-select" asp-for="BookModel.PublishType" asp-items="@publicationTypesList"></select>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <label class="form-label">Язык содержимого:</label>
+                    @{
+                        var languagesList = new SelectList(this.Model.Languages.Select(item => item.Name).ToList());
+                    }
+                    <select class="form-select" asp-for="BookModel.Language" asp-items="@languagesList"></select>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12 col-md-6">
+                    @{
+                        var genresList = this.Model.Genres.Select(item => item.Name).ToList();
+                    }
+                    <label class="form-label">Жанр публикации:</label>
+                    <ul class="list-group" style="overflow-y: scroll; max-height: 100px;">
+                        @for (var index = 0; index < genresList.Count; index++)
+                        {
+                            var item = genresList[index];
+                             <li class="list-group-item" style="cursor: pointer" onclick="changeChecker(event, '@($"form-check{index}")')">
+                                <div class="form-check form-switch d-flex flex-row justify-content-between p-0">
+                                    <label class="form-check-label">@item</label>
+                                    <input name="BookModel.Genres" id="@($"form-check{index}")" class="form-check-input" type="checkbox" value="@item">
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="BookModel.Genres"></span>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12">
+                    <label class="form-label">Краткое описание публикации:</label>
+                    <textarea class="form-control @(CheckValidation("BookModel.Description") ? "" : "is-invalid")" asp-for="BookModel.Description"
+                              type="text" maxlength="500" rows="4" required></textarea>
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="BookModel.Description"></span>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label class="form-label">Файл публикации:</label>
+                <div class="mb-3 col-12 col-md-6">
+                    <input asp-for="BookModel.BookBody" type="file" class="form-control @(CheckValidation("BookModel.BookBody") ? "" : "is-invalid")"
+                        accept="application/pdf" required />
+                    <span class="invalid-feedback" style="display: block;" asp-validation-for="BookModel.BookBody"></span>
+                </div>
+
+                <div class="mb-3 col-12 col-md-6">
+                    <button class="btn btn-outline-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBookCovers">
+                        Добавить обложку публикации
+                    </button>
+                </div>
+
+                <div class="collapse row justify-content-center mb-3" id="collapseBookCovers">
+                    <div class="col-12 col-md-6 col-lg-4 px-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <label class="form-label">Фронтальная обложка</label>
+                            </div>
+                            <div class="card-body" style="height: 400px; width: auto;">
+                                <img class="mb-3 card-img-top" id="outputFront" src="~/img/nobookcover.png" alt="...">
+                            </div>
+                            <div class="card-body">
+                                <input asp-for="BookModel.Image" type="file" class="form-control" accept="image/*" onchange="loadFile(event, 'outputFront')" />
+                            </div>
+                        </div>
+                        @*<img class="mb-3" id="outputFront" src="~/img/nobookcover.png" alt="..." />
+                        <input name="FrontCover" type="file" class="form-control" accept="image/*" onchange="loadFile(event, 'outputFront')" />*@
+                    </div>
+                </div>
+            </div>
+@*            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" required />
+                        <label class="form-check-label">
+                            <span>Подтвердите, что вы согласны с <a class="text-decoration-none" href="#">политикой</a> публикации издания</span>
+                        </label>
+                    </div>
+                </div>
+            </div>*@
+            <div class="row justify-content-center">
+                <input class="btn btn-dark mb-3 col-12 col-md-6" type="submit" value="Загрузить публикацию" />
+            </div>
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        const changeChecker = function(event, item) {
+            var checkbox = $(`#${item}`);
+            checkbox.prop('checked', checkbox.prop('checked') == true ? false : true);
+        }
+
+        const loadFile = function (event, output) {
+            var output = document.getElementById(output);
+            output.src = URL.createObjectURL(event.target.files[0]);
+
+            output.onload = () => {
+                URL.revokeObjectURL(output.src);
+            }
+        };
+
+    </script>
+
+}

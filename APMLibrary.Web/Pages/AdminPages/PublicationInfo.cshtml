@@ -1,0 +1,232 @@
+﻿@page "/profile/admin/publication/edit"
+@using System.Globalization;
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
+@model APMLibrary.Web.Pages.AdminPages.PublicationInfoModel
+@{
+    this.ViewData["Title"] = "Проверка публикации";
+    var imageUrl = (this.Model.BookInfo.Image == null ? "/img/nobookcover.png"
+        : $"data:image;base64,{Convert.ToBase64String(this.Model.BookInfo.Image)}");
+
+    bool CheckValidation(string name) => this.ModelState[name] == null
+        || this.ModelState[name]?.ValidationState == ModelValidationState.Valid;
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Профиль", "/ProfilePages/ProfileInfo" }, { "Админ", "/AdminPages/PublishSettings" }, { "Проверка публикации", null }
+    });
+}
+<div class="row w-100 mb-4 justify-content-center g-4">
+    @if (!this.ModelState.IsValid)
+    {
+        await this.Html.RenderPartialAsync("AlertPartial", "Неверно введены данные формы публикации");
+    }
+    <div class="col-12 col-md-3">
+        <div class="bg-white custom-bg-white p-3">
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <label class="form-label fw-bolder" style="font-size: 16px;">Обложка книги:</label>
+                </div>
+                <div class="card-body" style="height: 200px; width: auto;">
+                    <img class="mb-3 card-img-top w-100 h-100" style="object-fit: contain;" src="@imageUrl" alt="...">
+                </div>
+            </div>
+            <form class="mb-3 w-100" method="post" asp-page="PublicationInfo" asp-page-handler="StateChange">
+                @{
+                    var stateList = new List<SelectListItem>()
+                    {
+                        new SelectListItem("Обрабатывается", false.ToString(), !this.Model.BookInfo.IsPublished),
+                        new SelectListItem("Подтвержден", true.ToString(), this.Model.BookInfo.IsPublished),
+                    };
+                }
+                <input type="hidden" name="BookId" value="@this.Model.BookId" />
+                <select oninput="this.form.submit()" id="state-info" class="form-select border border-1" name="state" asp-items="@stateList"></select>
+            </form>
+            <a class="btn btn-dark w-100 mb-3" asp-page="/AdminPages/RatingsSettings" asp-route-BookId="@this.Model.BookId">Проверка комментариев</a>
+            
+        </div>
+    </div>
+
+    <div class="col-12 col-md-9">
+        <div class="bg-white custom-bg-white p-4 overflow-hidden">
+            <a class="fs-4 fw-bolder mb-3 h-100 overflow-hidden text-wrap text-dark text-decoration-none" style="overflow-wrap:anywhere;"
+                asp-page="/LibraryPages/BookInfo" asp-route-BookId="@this.Model.BookId">
+                @this.Model.BookInfo.Title
+                <i class="bi fs-5 bi-link-45deg"></i>
+            </a>
+            <div class="row w-100 mb-1">
+                <div class="col-12 col-md-4 overflow-hidden text-nowrap">
+                    <p class="text-primary" style="font-size: 16px;">@this.Model.BookInfo.AuthorName</p>
+                </div>
+                <div class="col-12 col-md-8 overflow-hidden text-nowrap">
+                    @for (var count = 0; count < 5; count++)
+                    {
+                        <span class="fa fa-star @((this.Model.BookInfo.Rating < count + 1) ? "" : "checked-star")"></span>
+                    }
+                    <span style="font-size: 14px;">&nbsp;&nbsp;Оценка: @($"{this.Model.BookInfo.Rating:F2}")</span>
+                </div>
+            </div>
+
+            <div class="row w-100 mb-4">
+                <div class="col-12 col-md-4 mb-3">
+                    <label class="form-label">Издатель:</label>
+                    <a class="btn btn-outline-secondary p-1 d-flex flex-row align-items-center"
+                        asp-page="/LibraryPages/PublisherCatalog" asp-route-PublisherId="@this.Model.BookInfo.Publisher.Id">
+                        @{
+                            var publisherImage = (this.Model.BookInfo.Publisher.Image == null ? "/img/noprofileimage.png"
+                            : $"data:image;base64,{Convert.ToBase64String(this.Model.BookInfo.Publisher.Image)}");
+                        }
+                        <img src="@publisherImage" alt="..." class="border border-secondary"
+                             style="width: 40px; height: 40px; border-radius: 10px; object-fit: contain;" />
+
+                        <div class="flex-grow-1 overflow-hidden mx-2">
+                            <p class="text-start text-dark m-0">@this.Model.BookInfo.Publisher.Name @this.Model.BookInfo.Publisher.Surname</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-12 col-md-4 mb-3 overflow-hidden ">
+                    <label class="form-label text-nowrap">Объем публикации:</label>
+                    <input class="form-control bg-white" value="@this.Model.BookInfo.PageCount cтраниц(ы)" disabled />
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label class="form-label">Артикул:</label>
+                    <input class="form-control bg-white" value="@this.Model.BookInfo.VenderCode" disabled />
+                </div>
+
+            </div>
+
+            <form class="row w-100 mb-3 justify-content-center" asp-page="/AdminPages/PublicationInfo" method="post"  asp-antiforgery="true">
+                <h2 class="fs-5 fw-bolder mb-3">Информация об издании:</h2>
+                <div class="form-text mb-2 text-danger" style="font-size: 16px;" asp-validation-summary="ModelOnly"></div>
+                <div class="col-12 col-md-6 mb-3">
+                    @{
+                        var genresList = this.Model.Genres.Select(item => item.Name).ToList();
+                    }
+                    <label class="form-label">Жанр публикации:</label>
+                    <ul class="list-group" style="overflow-y: scroll; max-height: 150px;">
+                        @for (var index = 0; index < genresList.Count; index++)
+                        {
+                            var item = genresList[index];
+                            var isCheck = this.Model.BookInfo.Genres?.FirstOrDefault(p => p.Name == item) != null;
+
+                            <li class="list-group-item" style="cursor: pointer" onclick="changeChecker(event, '@($"form-check{index}")')">
+                                <div class="form-check form-switch d-flex flex-row justify-content-between p-0">
+
+                                    <label class="form-check-label">@item</label>
+                                    @if (isCheck)
+                                    {
+                                        <input name="Genres" id="@($"form-check{index}")" class="form-check-input" checked type="checkbox" value="@item">
+                                    }
+                                    else
+                                    {
+                                        <input name="Genres" id="@($"form-check{index}")" class="form-check-input" type="checkbox" value="@item">
+                                    }
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    @this.Html.ValidationMessage("Genres", new { @class="invalid-feedback", style="display: block;" })
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+
+                    <label class="form-label">Описание содержимого:</label>
+                    <textarea class="form-control bg-white" name="Description" 
+                        style="max-height: 200px; min-height: 150px;" rows="5">@this.Model.BookInfo.Description</textarea>
+                    @this.Html.ValidationMessage("Description", new { @class="invalid-feedback", style="display: block;" })
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label class="form-label">Язык перевода:</label>
+                    @{
+                        var languagesList = this.Model.Languages
+                            .Select(item => new SelectListItem(item.Name, item.Name, item.Name == this.Model.BookInfo.Language)).ToList();
+                    }
+                    <select class="form-select" name="Language" asp-items="@languagesList"></select>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label class="form-label">Тип публикации:</label>
+                    @{
+                        var publicationTypesList = this.Model.BookTypes
+                            .Select(item => new SelectListItem(item.Name, item.Name, item.Name == this.Model.BookInfo.BookType)).ToList();
+                    }
+                    <select class="form-select" name="PublishType" asp-items="@publicationTypesList"></select>
+                </div>
+                <div class="col-12 col-md-4 mb-4">
+                    <label class="form-label">Дата создания:</label>
+                    <input name="YearIssue" type="date" id="date-input" value="@this.Model.BookInfo.Date"
+                           class="form-control @(CheckValidation("BookModel.YearIssue") ? "" : "is-invalid")" required>
+                    @this.Html.ValidationMessage("YearIssue", new { @class="invalid-feedback", style="display: block;" })
+                </div>
+
+                <div class="col-12 col-md-6 mb-3">
+                    <input class="btn btn-dark w-100" type="submit" value="Редактировать" />
+                </div>
+
+                <div class="col-12 col-md-6 mb-4">
+                    <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Удалить публикацию
+                    </button>
+
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Удаление публикации</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    При подтверждении публикация будет удалена из системы. Вы уверены в этом?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Назад</button>
+                                    <a class="btn btn-dark" asp-page="PublicationInfo" asp-route-id="@this.Model.BookId"
+                                        asp-page-handler="Delete">Подтвердить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="BookId" value="@this.Model.BookId" />
+                <input type="hidden" name="AuthorName" value="@this.Model.BookInfo.AuthorName" />
+                <input type="hidden" name="Title" value="@this.Model.BookInfo.Title" />
+            </form>
+        </div>
+
+    </div>
+
+</div>
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#date-input').val('@this.Model.BookInfo.Date.ToString("yyyy-MM-dd")');
+            $('#state-info option').css({color: '#000'})
+
+            switch ($("#state-info option:selected").text()) {
+                case "Обрабатывается":
+                    $('#state-info').addClass("border-danger");
+                    $('#state-info').addClass("text-danger");
+                    $('#state-info').removeClass("text-success");
+                    $('#state-info').removeClass("border-success");
+                    break;
+                case "Подтвержден":
+                    $('#state-info').removeClass("text-danger");
+                    $('#state-info').removeClass("border-danger");
+                    $('#state-info').addClass("text-success");
+                    $('#state-info').addClass("border-success");
+                    break;
+                default: break;
+            }
+        })
+
+        const changeChecker = function (event, item) {
+            var checkbox = $(`#${item}`);
+            checkbox.prop('checked', checkbox.prop('checked') == true ? false : true);
+        }
+
+    </script>
+
+}

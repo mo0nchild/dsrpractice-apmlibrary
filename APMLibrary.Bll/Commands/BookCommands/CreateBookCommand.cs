@@ -23,8 +23,7 @@ namespace APMLibrary.Bll.Commands.BookCommands
         public List<string> Genres { get; set; } = default!;
 
         public byte[] BookBody { get; set; } = default!;
-        public byte[]? FrontCover { get; set; } = null;
-        public byte[]? BackCover { get; set; } = null;
+        public byte[]? Image { get; set; } = null;
 
         public virtual void ConfigureMapping(AutoMapper.Profile profile)
         {
@@ -36,6 +35,7 @@ namespace APMLibrary.Bll.Commands.BookCommands
                 .ForMember(item => item.Description, options => options.MapFrom(item => item.Description))
                 .ForMember(item => item.YearIssue, options => options.MapFrom(item => item.YearIssue))
                 .ForMember(item => item.Body, options => options.MapFrom(item => item.BookBody))
+                .ForMember(item => item.Image, options => options.MapFrom(item => item.Image))
 
                 .ForMember(item => item.Language, options => options.Ignore())
                 .ForMember(item => item.Genres, options => options.Ignore());

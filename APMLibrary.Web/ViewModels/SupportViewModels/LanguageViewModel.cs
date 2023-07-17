@@ -1,5 +1,5 @@
 ﻿using APMLibrary.Bll.Common.Mappings;
-using APMLibrary.Bll.Models;
+using APMLibrary.Bll.Models.SupportModels;
 
 namespace APMLibrary.Web.ViewModels.SupportViewModels
 {

@@ -17,7 +17,7 @@ services:
     networks:
       - apmlibrarynetwork
 
-    restart: on-failure:5
+    restart: always
 
     deploy:
       restart_policy:

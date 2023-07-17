@@ -1,6 +1,7 @@
 ﻿@page "/catalog"
 @using APMLibrary.Bll.Requests.BookRequests;
 @using APMLibrary.Web.ViewComponents;
+@using APMLibrary.Web.ViewModels.ComponentsViewModels;
 @using Microsoft.Extensions.Options;
 
 @model APMLibrary.Web.Pages.LibraryPages.LibraryCatalogModel
@@ -12,7 +13,7 @@
     await this.Html.RenderPartialAsync("SectionsPartial");
     await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
     {
-        { "Главная", "/Index" }, { "Библитека", null }
+        { "Главная", "/Index" }, { "Библиотека", null }
     });
 }
 
@@ -22,7 +23,7 @@
 
 <div class="row w-100 mb-5 g-lg-4">
 
-    <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+    <div class="col-12 col-md-4 col-lg-3 mb-4 mb-lg-0">
         <div class="bg-white custom-bg-white p-3">
 
             <h2 class="fs-5 fw-bolder mb-4">Категории и жанры</h2>
@@ -84,20 +85,20 @@
         </div>
     </div>
 
-    <div class="col-12 col-lg-8">
+    <div class="col-12 col-md-8 col-lg-9">
 
         <div class="row mb-4">
             <div class="col-12">
                 @{
                     var allBookParam = new CatalogComponentParameter()
                     {
-                        RedirectLink = "/catalog/list",
+                        RedirectLink = this.Url.Page("/LibraryPages/ListCatalog", new { OrderType = OrderType.PublishTitle }) ?? "",
                         Title = "Все публикации",
                         
                         Request = new GetBooksListRequest()
                         {
                             IsPublished = true,
-                            SortingType = SortingType.ByDate,
+                            SortingType = SortingType.ByName,
                             Skip = 0,
                             Take = PageOptions.Value.MaxItemsOnPage,
                         }
@@ -111,7 +112,7 @@
                 @{
                     var bestBookParam = new CatalogComponentParameter()
                     {
-                        RedirectLink = "/catalog/list",
+                        RedirectLink = this.Url.Page("/LibraryPages/ListCatalog", new { OrderType = OrderType.RatingValue }) ?? "",
                         Title = "Топ рейтинга",
                         Request = new GetBooksListRequest()
                         {
@@ -123,6 +124,25 @@
                     };
                 }
                 @await this.Component.InvokeAsync(typeof(CatalogViewComponent), new { param = bestBookParam })
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                @{
+                    var newBookParam = new CatalogComponentParameter()
+                    {
+                        RedirectLink = this.Url.Page("/LibraryPages/ListCatalog", new { OrderType = OrderType.DateTime }) ?? "",
+                        Title = "Новые публикации",
+                        Request = new GetBooksListRequest()
+                        {
+                            IsPublished = true,
+                            SortingType = SortingType.ByDate,
+                            Skip = 0,
+                            Take = PageOptions.Value.MaxItemsOnPage,
+                        }
+                    };
+                }
+                @await this.Component.InvokeAsync(typeof(CatalogViewComponent), new { param = newBookParam })
             </div>
         </div>
 

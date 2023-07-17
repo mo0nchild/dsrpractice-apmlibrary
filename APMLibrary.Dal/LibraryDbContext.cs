@@ -16,7 +16,6 @@ namespace APMLibrary.Dal
         protected LibraryDbContext() : base() { }
 
         public virtual DbSet<Authorization> Authorizations { get; set; } = default!;
-        public virtual DbSet<BookCover> BookCovers { get; set; } = default!;
         public virtual DbSet<Category> Categories { get; set; } = default!;
 
         public virtual DbSet<Genre> Genres { get; set; } = default!;

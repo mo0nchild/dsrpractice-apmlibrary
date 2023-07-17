@@ -1,4 +1,4 @@
-﻿using APMLibrary.Bll.Models;
+﻿using APMLibrary.Bll.Models.ProfileModels;
 using APMLibrary.Dal;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

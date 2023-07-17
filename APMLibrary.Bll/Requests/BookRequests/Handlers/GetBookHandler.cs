@@ -1,4 +1,4 @@
-﻿using APMLibrary.Bll.Models;
+﻿using APMLibrary.Bll.Models.BookModels;
 using APMLibrary.Dal;
 using AutoMapper;
 using MediatR;
@@ -28,7 +28,6 @@ namespace APMLibrary.Bll.Requests.BookRequests.Handlers
                     .Include(item => item.Genres)
                     .Include(item => item.PublicationType)
                     .Include(item => item.Ratings)
-                    .Include(item => item.BookCover)
                     .Include(item => item.Language).FirstOrDefaultAsync();
 
                 return this._mapper.Map<BookDto>(requestResult);

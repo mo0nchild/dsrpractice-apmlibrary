@@ -19,7 +19,7 @@ namespace APMLibrary.Bll.Commands.BookCommands
         public string PublishType { get; set; } = default!;
         public string Language { get; set; } = default!;
 
-        public string Description { get; set; } = default!;
+        public string? Description { get; set; } = default;
         public List<string> Genres { get; set; } = default!;
     }
 }

@@ -27,9 +27,6 @@ namespace APMLibrary.Web.Pages.LibraryPages
         }
 
         [FromQuery, BindProperty(SupportsGet = true)]
-        public string? CategoryGenre { get; set; } = default!;
-
-        [FromQuery, BindProperty(SupportsGet = true)]
         public FilterViewModel FilterModel { get; set; } = new();
 
         [FromQuery, BindProperty(SupportsGet = true)]
@@ -44,7 +41,7 @@ namespace APMLibrary.Web.Pages.LibraryPages
             {
                 SortingType = this.mapper.Map<SortingType>(this.FilterModel.OrderType),
                 IsPublished = true,
-                GenreFilter = this.CategoryGenre,
+                GenreFilter = this.FilterModel.CategoryGenre,
 
                 LanguageFilter = this.FilterModel.Language,
                 TextFilter = this.FilterModel.SearchingText,

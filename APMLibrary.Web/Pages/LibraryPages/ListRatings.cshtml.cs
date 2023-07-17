@@ -4,6 +4,7 @@ using APMLibrary.Web.Configurations;
 using APMLibrary.Web.ViewModels.BookViewModels;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace APMLibrary.Web.Pages.LibraryPages
 {
+    [Authorize(Policy = "User")]
     public partial class ListRatingsModel : PageModel
     {
         private readonly IMediator mediator = default!;

@@ -1,5 +1,6 @@
 ﻿using APMLibrary.Bll.Common.Behaviors;
 using APMLibrary.Bll.Common.Mappings;
+using APMLibrary.Bll.Services.Implements;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +30,7 @@ namespace APMLibrary.Bll
 
                 options.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
             });
-            return services;
+            return services.AddTextFileService().AddDatabaseBackup();
         }
     }
 }

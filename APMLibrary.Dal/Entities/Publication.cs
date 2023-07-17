@@ -24,9 +24,8 @@ namespace APMLibrary.Dal.Entities
         public int LanguageId { get; set; } = default!;
         public Language Language { get; set; } = default!;
 
-        public int BookCoverId { get; set; } = default!;
-        public BookCover BookCover { get; set;} = default!;
-        
+        public byte[]? Image { get; set; } = null;
+
         public int PublisherId { get; set; } = default!;
         public Profile Publisher { get; set; } = default!;
 

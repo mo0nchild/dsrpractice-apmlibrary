@@ -18,7 +18,7 @@ namespace APMLibrary.Web.Pages.LibraryPages
         protected readonly IMediator mediator = default!;
         protected readonly IMapper mapper = default!;
 
-        protected int ProfileId { get => int.Parse(this.User.FindFirstValue(ClaimTypes.PrimarySid)); }
+        public int ProfileId { get => int.Parse(this.User.FindFirstValue(ClaimTypes.PrimarySid)); }
         public BookInfoModel(IMediator mediator, IMapper mapper) : base()
         {
             this.mediator = mediator;
@@ -48,7 +48,7 @@ namespace APMLibrary.Web.Pages.LibraryPages
             try {
                 await this.mediator.Send(new SetRatingCommand() 
                 {
-                    Id = viewModel.PublishId,
+                    PublishId = viewModel.PublishId,
                     ReaderId = this.ProfileId,
                     Comment = viewModel.Comment,
                     Rating = (int) Math.Round(viewModel.Rating),
@@ -63,6 +63,24 @@ namespace APMLibrary.Web.Pages.LibraryPages
             { 
                 Message = "Спасибо за ваш отзыв",  BookId = viewModel.PublishId,
             });
+        }
+
+        public async Task<IActionResult> OnGetBookmarkAsync()
+        {
+            try
+            {
+                await this.mediator.Send(new SetBookmarkCommand()
+                {
+                    ReaderId = this.ProfileId,
+                    PublishId = this.BookId,
+                });
+                this.Message = "Публикация сохранена в ваши закладки";
+            }
+            catch(Exception error)
+            {
+                this.ModelState.AddModelError("", error.Message);
+            }
+            return await this.OnGetAsync();
         }
 
         public async Task<IActionResult> OnGetFileAsync()

@@ -1,4 +1,4 @@
-﻿using APMLibrary.Bll.Models;
+﻿using APMLibrary.Bll.Models.BookModels;
 using APMLibrary.Dal;
 using AutoMapper;
 using iTextSharp.text.pdf.parser;
@@ -26,11 +26,11 @@ namespace APMLibrary.Bll.Requests.BookRequests.Handlers
             using (var dbcontext = await this._dbcontextFactory.CreateDbContextAsync(cancellationToken))
             {
                 var requestResult = dbcontext.Publications.Include(item => item.Language).Include(item => item.Genres)
-                    .Include(item => item.BookCover).Include(item => item.Ratings)
+                    .Include(item => item.Ratings).Include(item => item.Publisher).Include(item => item.PublicationType)
                     .Where(item =>
                         (request.TextFilter == null ? true : Regex.IsMatch(item.Title, request.TextFilter)) &&
                         (request.GenreFilter == null ? true : item.Genres.FirstOrDefault(op => op.Name == request.GenreFilter) != null) &&
-                        //(request.IsPublished == null ? true : item.Published == request.IsPublished.Value) &&
+                        (request.IsPublished == null ? true : item.Published == request.IsPublished.Value) &&
                         (request.LanguageFilter == null ? true : item.Language.Name == request.LanguageFilter));
 
                 var requestObjects = await requestResult.Include(item => item.Ratings)

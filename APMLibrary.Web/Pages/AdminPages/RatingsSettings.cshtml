@@ -1,0 +1,115 @@
+﻿@page
+@model APMLibrary.Web.Pages.AdminPages.RatingsSettingsModel
+@{
+    this.ViewData["Title"] = "Проверка оценок";
+
+    async Task RenderPageActionLink(string text, bool isDisabled, int page)
+    {
+        var transferData = new Dictionary<string, string?>()
+        {
+            { "BookId", this.Model.BookId.ToString() },
+            { "CurrentPage", page.ToString() },
+        };
+        <div class="page-item @((isDisabled ? "disabled" : ""))">
+
+            <a class="page-link" asp-page="ListRatings" asp-all-route-data="@transferData">@text</a>
+
+        </div>
+    }
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Профиль", "/ProfilePages/ProfileInfo" }, 
+        { "Админ", "/AdminPages/PublishSettings" }, { "Проверка комментариев", null }
+    });
+}
+<div class="row w-100 mb-4 justify-content-center g-4">
+
+    <h1 class="fs-4 fw-bolder mb-3 h-100 overflow-hidden text-wrap" style="overflow-wrap:anywhere;">
+        <span>Отзывы</span>
+        <a asp-page="/AdminPages/PublicationInfo" asp-route-BookId="@this.Model.BookId" class="text-decoration-none">@this.Model.Title</a>
+    </h1>
+
+    <div class="col-12 col-md-10 col-lg-8">
+        @if (this.Model.Ratings == null || this.Model.Ratings.Count() <= 0)
+        {
+            <div class="my-5 p-3">
+                <p class="fs-4 w-100 text-center">Список комментариев пока пуст</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in this.Model.Ratings)
+            {
+                <div class="row w-100 mb-4">
+                    <div class="col-12">
+
+                        <div class="bg-white custom-bg-white p-4 overflow-hidden">
+                            <div class="d-flex flex-row justify-content-between">
+                                @{
+                                    var publisherImage = (item.Reader.Image == null ? "/img/noprofileimage.png"
+                                    : $"data:image;base64,{Convert.ToBase64String(item.Reader.Image)}");
+                                }
+                                <div class="d-flex flex-row align-items-center">
+                                    <img src="@publisherImage" alt="..." class="border border-secondary"
+                                         style="width: 40px; height: 40px; border-radius: 10px; object-fit: contain;" />
+
+                                    <div class="mx-2">
+                                        <p class="m-0" style="">@item.Reader.Name @item.Reader.Surname</p>
+                                        @for (var count = 0; count < 5; count++)
+                                        {
+                                            <span class="fa fa-star @((item.Rating < count + 1) ? "" : "checked-star")"></span>
+                                        }
+                                    </div>
+                                </div>
+                                <a class="btn-close" asp-page="RatingsSettings" asp-page-handler="Delete" 
+                                    asp-route-BookId="@this.Model.BookId" asp-route-ratingId="@item.Id"></a>
+                            </div>
+                            <hr />
+                            <div class="mb-3">
+                                @if (item.Comment != null)
+                                {
+                                    <label class="form-label">Комментарий пользователя:</label>
+                                    <textarea class="form-control bg-white" style="resize: none; overflow: auto;" rows="4" disabled>@item.Comment</textarea>
+                                }
+                                else
+                                {
+                                    <div class="">
+                                        <p class="fs-5 w-100 text-center">Отсутствует комментарий</p>
+                                    </div>
+                                }
+                            </div>
+                            <label class="form-label">@item.DateTime</label>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        }
+        <div class="row mb-4 w-100">
+            @{
+                var pageCount = Math.Ceiling((double)this.Model.AllCount / this.Model.PageOptions.MaxItemsOnPage);
+            }
+            <div class="col-12">
+                <div class="pagination">
+                    @{
+                        await RenderPageActionLink("Назад", this.Model.CurrentPage <= 0, this.Model.CurrentPage - 1);
+                    }
+                    <div class="d-inline-flex p-0 pb-1" style="overflow-x: auto;">
+                        @for (var index = 0; index < pageCount; index++)
+                        {
+                            await RenderPageActionLink((index + 1).ToString(), this.Model.CurrentPage == index, index);
+                        }
+                    </div>
+                    @{
+                        await RenderPageActionLink("Вперед", this.Model.CurrentPage >= pageCount - 1, this.Model.CurrentPage + 1);
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

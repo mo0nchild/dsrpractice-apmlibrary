@@ -1,0 +1,66 @@
+﻿@page "/catalog/book/reading"
+@model APMLibrary.Web.Pages.LibraryPages.BookReadingModel
+@{
+    this.ViewData["Title"] = "Чтение издания";
+    async Task RenderPageActionLink(string text, bool isDisabled, int page)
+    {
+        var transferData = new Dictionary<string, string?>()
+        {
+            { "BookId", this.Model.BookId.ToString() },
+            { "CurrentPage", page.ToString() },
+        };
+        <div class="page-item @((isDisabled ? "disabled" : ""))">
+
+            <a class="page-link" asp-page="BookReading" asp-all-route-data="@transferData">@text</a>
+
+        </div>
+    }
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Библитека", "/LibraryPages/LibraryCatalog" }, { "Чтение издания", null }
+    });
+}
+<div class="row justify-content-center mb-5 w-100">
+
+    <div class="col-12 col-md-8">
+        <div class="bg-white custom-bg-white p-5 overflow-hidden">
+
+            <h2 class="fs-5 fw-bolder mb-4">
+                Чтение <a class="text-decoration-none" asp-page="BookInfo" asp-route-BookId="@this.Model.BookId">@this.Model.BookInfo?.Title</a>
+            </h2>
+
+            <div class="row mb-4 w-100">
+                <div class="col-12">
+                    @{
+                        var pageCount = this.Model.BookInfo?.NumberPages ?? default;
+                        var pageItems = Enumerable.Range(0, pageCount).Select(item => new SelectListItem($"Страница {item + 1}", item.ToString()));
+                    }
+                    <div class="pagination">
+                        @{
+                            await RenderPageActionLink("Назад", this.Model.CurrentPage <= 0, this.Model.CurrentPage - 1);
+                        }
+                        <form class="" method="get" asp-page="BookReading">
+                            <input type="hidden" asp-for="BookId" value="@this.Model.BookId"/>
+                            <select class="form-select" oninput="this.form.submit()" asp-for="CurrentPage" asp-items="@pageItems"></select>
+                        </form>
+                        @{
+                            await RenderPageActionLink("Вперед", this.Model.CurrentPage >= pageCount - 1, this.Model.CurrentPage + 1);
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="border border-1 border-secondary p-3" style="height:600px; overflow-y:scroll; border-radius:10px;">
+                @foreach (var line in this.Model.PageContent.Split('\n'))
+                {
+                    <p class="m-0">@line</p>
+                }
+            </div>
+
+        </div>
+    </div>
+
+</div>

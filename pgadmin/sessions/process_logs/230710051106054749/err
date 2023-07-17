@@ -1,0 +1,128 @@
+230710051106855159,pg_dump: last built-in OID is 16383
+
+230710051106858682,pg_dump: reading extensions
+
+230710051106866160,pg_dump: identifying extension members
+
+230710051106873250,pg_dump: reading schemas
+
+230710051106878062,pg_dump: reading user-defined tables
+
+230710051106914536,pg_dump: reading user-defined functions
+
+230710051106955640,pg_dump: reading user-defined types
+
+230710051106963405,pg_dump: reading procedural languages
+
+230710051106973045,pg_dump: reading user-defined aggregate functions
+
+230710051106974281,pg_dump: reading user-defined operators
+
+230710051106980049,pg_dump: reading user-defined access methods
+
+230710051106983391,pg_dump: reading user-defined operator classes
+
+230710051106989150,pg_dump: reading user-defined operator families
+
+230710051106996984,pg_dump: reading user-defined text search parsers
+
+230710051107004897,pg_dump: reading user-defined text search templates
+
+230710051107011505,pg_dump: reading user-defined text search dictionaries
+
+230710051107018170,pg_dump: reading user-defined text search configurations
+
+230710051107024678,pg_dump: reading user-defined foreign-data wrappers
+
+230710051107031323,pg_dump: reading user-defined foreign servers
+
+230710051107037802,pg_dump: reading default privileges
+
+230710051107043653,pg_dump: reading user-defined collations
+
+230710051107057167,pg_dump: reading user-defined conversions
+
+230710051107067111,pg_dump: reading type casts
+
+230710051107071439,pg_dump: reading transforms
+
+230710051107073062,pg_dump: reading table inheritance information
+
+230710051107075710,pg_dump: reading event triggers
+
+230710051107082418,pg_dump: finding extension tables
+
+230710051107097217,pg_dump: finding inheritance relationships
+
+230710051107098372,pg_dump: reading column info for interesting tables
+
+230710051107118169,pg_dump: finding table default expressions
+
+230710051107132134,pg_dump: finding table check constraints
+
+230710051107135317,pg_dump: flagging inherited columns in subtables
+
+230710051107137652,pg_dump: reading partitioning data
+
+230710051107141070,pg_dump: reading indexes
+
+230710051107158019,pg_dump: flagging indexes in partitioned tables
+
+230710051107159328,pg_dump: reading extended statistics
+
+230710051107165240,pg_dump: reading constraints
+
+230710051107166640,pg_dump: reading triggers
+
+230710051107172013,pg_dump: reading rewrite rules
+
+230710051107180345,pg_dump: reading policies
+
+230710051107181445,pg_dump: reading row-level security policies
+
+230710051107187997,pg_dump: reading publications
+
+230710051107193704,pg_dump: reading publication membership of tables
+
+230710051107202000,pg_dump: reading publication membership of schemas
+
+230710051107208338,pg_dump: reading subscriptions
+
+230710051107220679,pg_dump: reading large objects
+
+230710051107224746,pg_dump: reading dependency data
+
+230710051107267670,pg_dump: saving encoding = UTF8
+
+230710051107270398,pg_dump: saving standard_conforming_strings = on
+
+230710051107271898,pg_dump: saving search_path = 
+
+230710051107273187,pg_dump: saving database definition
+
+230710051107325814,pg_dump: dumping contents of table "public.Authorizations"
+
+230710051107330108,pg_dump: dumping contents of table "public.BookCovers"
+
+230710051107361188,pg_dump: dumping contents of table "public.Bookmarks"
+
+230710051107362926,pg_dump: dumping contents of table "public.Categories"
+
+230710051107365319,pg_dump: dumping contents of table "public.GenrePublication"
+
+230710051107367852,pg_dump: dumping contents of table "public.Genres"
+
+230710051107370230,pg_dump: dumping contents of table "public.Languages"
+
+230710051107372896,pg_dump: dumping contents of table "public.Profiles"
+
+230710051107432946,pg_dump: dumping contents of table "public.PublicationTypes"
+
+230710051107435823,pg_dump: dumping contents of table "public.Publications"
+
+230710051109316197,pg_dump: dumping contents of table "public.Quotes"
+
+230710051109318163,pg_dump: dumping contents of table "public.Ratings"
+
+230710051109320506,pg_dump: dumping contents of table "public.__EFMigrationsHistory"
+

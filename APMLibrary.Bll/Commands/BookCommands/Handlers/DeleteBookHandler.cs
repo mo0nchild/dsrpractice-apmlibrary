@@ -26,8 +26,6 @@ namespace APMLibrary.Bll.Commands.BookCommands.Handler
 
                 dbcontext.Publications.RemoveRange(result);
                 await dbcontext.SaveChangesAsync(cancellationToken);
-
-                await dbcontext.BookCovers.Where(item => item.Id == result.BookCoverId).ExecuteDeleteAsync();
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using APMLibrary.Bll.Common.Exceptions;
+using APMLibrary.Bll.Services.Interfaces;
 using APMLibrary.Dal;
 using APMLibrary.Dal.Entities;
 using AutoMapper;
@@ -15,16 +16,17 @@ namespace APMLibrary.Bll.Commands.BookCommands.Handler
 {
     public partial class CreateBookHandler : IRequestHandler<CreateBookCommand>
     {
-        protected readonly IDbContextFactory<LibraryDbContext> _dbcontextFactory = default!;
-        protected readonly IMapper _mapper = default!;
+        protected readonly IDbContextFactory<LibraryDbContext> dbcontextFactory = default!;
+        protected readonly IMapper mapper = default!;
+        private readonly ITextFileReader reader = default!;
 
-        public CreateBookHandler(IDbContextFactory<LibraryDbContext> factory, IMapper mapper) : base()
-            => (this._dbcontextFactory, this._mapper) = (factory, mapper);
+        public CreateBookHandler(IDbContextFactory<LibraryDbContext> factory, IMapper mapper, ITextFileReader reader)
+            : base() => (this.dbcontextFactory, this.mapper, this.reader) = (factory, mapper, reader);
 
         public async Task Handle(CreateBookCommand request, CancellationToken cancellationToken)
         {
-            var mappedRequest = this._mapper.Map<Publication>(request);
-            using (var dbcontext = await this._dbcontextFactory.CreateDbContextAsync(cancellationToken))
+            var mappedRequest = this.mapper.Map<Publication>(request);
+            using (var dbcontext = await this.dbcontextFactory.CreateDbContextAsync(cancellationToken))
             {
                 if((await dbcontext.Profiles.FirstOrDefaultAsync(item => item.Id == request.PublisherId)) == null)
                 {
@@ -49,12 +51,9 @@ namespace APMLibrary.Bll.Commands.BookCommands.Handler
                 {
                     throw new CreateBookException("Не установлен список жанров и категорий");
                 }
-                mappedRequest.NumberPages = (new PdfReader(request.BookBody)).NumberOfPages;
-                mappedRequest.BookCover = new BookCover()
-                {
-                    BackCover = request.BackCover,
-                    FrontCover = request.FrontCover,
-                };
+                mappedRequest.NumberPages = this.reader.GetPagesCount(request.BookBody);
+                mappedRequest.Published = default!;
+
                 await dbcontext.AddRangeAsync(mappedRequest);
                 await dbcontext.SaveChangesAsync(cancellationToken);
             }

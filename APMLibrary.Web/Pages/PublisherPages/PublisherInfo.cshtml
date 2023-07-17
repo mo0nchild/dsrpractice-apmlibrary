@@ -1,0 +1,116 @@
+﻿@page "/publisher"
+@model APMLibrary.Web.Pages.PublisherPages.PublisherInfoModel
+@{
+    this.ViewData["Title"] = "Издательство";
+}
+@{
+    await this.Html.RenderPartialAsync("SectionsPartial");
+    await this.Html.RenderPartialAsync("BreadcrumbPartial", new Dictionary<string, string?>()
+    {
+        { "Главная", "/Index" }, { "Издательство", null }
+    });
+}
+<div class="row w-100 mb-5 justify-content-center g-4">
+    <h1 class="fs-4 fw-bolder mb-4 h-100 overflow-hidden text-wrap" style="overflow-wrap:anywhere;">
+        <span>Панель издателя</span>
+    </h1>
+
+    <div class="col-12 col-md-4">
+
+        <div class="bg-white d-flex flex-column custom-bg-white p-4">
+            <h2 class="fs-5 m-0 fw-bolder">Информация издателя</h2>
+            @{
+                var generalRating = this.Model.Publications.Where(item => item.Published)
+                    .Select(item => item.Rating).DefaultIfEmpty().Average();
+                var generalComment = this.Model.Publications.Select(item => item.CommentCount).DefaultIfEmpty().Sum();
+                var generalPages = this.Model.Publications.Select(item => item.PageCount).DefaultIfEmpty().Sum();
+            }
+            <hr />
+            <div class="col-12 mb-2 overflow-hidden text-nowrap">
+                @for (var count = 0; count < 5; count++)
+                {
+                    <span class="fa fa-star fs-5 @((generalRating < count + 1) ? "" : "checked-star")"></span>
+                }
+                <span style="font-size: 18px;">&nbsp;&nbsp;Оценка: @($"{generalRating:F2}")</span>
+            </div>
+            <div class="col-12 mb-2 overflow-hidden text-nowrap">
+                <p class="form-label m-0" style="font-size: 16px;">Кол-во комментариев: @generalComment</p>
+            </div>
+            <div class="col-12 mb-2 overflow-hidden text-nowrap">
+                <p class="form-label m-0" style="font-size: 16px;">Кол-во публикаций: @this.Model.Publications.Count()</p>
+            </div>
+            <div class="col-12 mb-4 overflow-hidden text-nowrap">
+                <p class="form-label m-0" style="font-size: 16px;">Кол-во страниц: @generalPages</p>
+            </div>
+            <div class="col-12 mb-4 overflow-hidden text-nowrap">
+                <a class="btn btn-dark w-100" asp-page="/PublisherPages/AddBook">Добавить публикацию</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-12 col-md-8">
+
+        <div class="bg-white d-flex flex-column custom-bg-white p-4">
+            <h2 class="fs-5 m-0 mb-4 fw-bolder">Список публикаций</h2>
+
+            @if (this.Model.Publications == null || this.Model.Publications.Count() <= 0)
+            {
+                <div class="my-5 p-3">
+                    <p class="fs-5 w-100 text-center">Список публикаций пока пуст</p>
+                </div>
+            }
+            else
+            {
+                <div class="overflow-scroll mb-5">
+                    <table class="table w-100">
+                        <thead>
+                            <tr>
+                                <th scope="col">Обложка</th>
+                                <th scope="col">Название</th>
+                                <th scope="col">Автор</th>
+                                <th scope="col">Cтр.</th>
+                                <th scope="col">Оценка</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var index = 0; index < this.Model.Publications.Count(); index++)
+                            {
+                                var item = this.Model.Publications.ElementAt(index);
+                                var imageUrl = (item.Image == null ? "/img/nobookcover.png" : $"data:image;base64,{Convert.ToBase64String(item.Image)}");
+                                var publishUrl = this.Url.Page("/LibraryPages/BookInfo", new { BookId = item.Id });
+                                <tr style="cursor: pointer;" onclick="window.location='@publishUrl'">
+                                    <td class="p-2" width="60">
+                                        <img src="@imageUrl" alt="..." class="card-img-catalog border border-secondary"
+                                             style="width: 5rem; height: 5rem; border-radius: 10px;" />
+                                    </td>
+                                    <td class="p-2" width="280">@item.Title</td>
+                                    <td class="p-2" width="130">@item.AuthorName</td>
+                                    <td class="p-2" width="80">@item.PageCount</td>
+                                    <td class="p-2" width="120">
+                                        <div class="d-flex flex-row text-nowrap">
+                                            @for (var count = 0; count < 5; count++)
+                                            {
+                                                <span class="fa fa-star @((item.Rating < count + 1) ? "" : "checked-star")"></span>
+                                            }
+                                        </div>
+                                        <div class="d-flex flex-row text-nowrap">
+                                            <span style="font-size: 14px;">&nbsp;&nbsp; Оценка: @($"{@item.Rating:F2}")</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-2">
+                                        <i class="bi fs-4 text-center @(item.Published ? "bi-bookmark-check text-success" : "bi-bookmark-dash text-danger")"></i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            
+        </div>
+
+    </div>
+
+</div>

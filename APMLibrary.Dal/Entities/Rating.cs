@@ -14,7 +14,7 @@ namespace APMLibrary.Dal.Entities
         public int Id { get; set; } = default!;
 
         public int Value { get; set; } = default!;
-        public DateOnly DateOnly { get; set; } = default!;
+        public DateTime DateOnly { get; set; } = default!;
         public string? Comment { get; set; } = default!;
         
         public int ReaderId { get; set; } = default!;
