@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace APMLibrary.Bll.Commands.BookCommands.Handler
 {
-    public partial class CreateBookHandler : IRequestHandler<CreateBookCommand>
+    public partial class CreateBookHandler : IRequestHandler<CreateBookCommand, int?>
     {
         protected readonly IDbContextFactory<LibraryDbContext> dbcontextFactory = default!;
         protected readonly IMapper mapper = default!;
@@ -23,7 +23,7 @@ namespace APMLibrary.Bll.Commands.BookCommands.Handler
         public CreateBookHandler(IDbContextFactory<LibraryDbContext> factory, IMapper mapper, ITextFileReader reader)
             : base() => (this.dbcontextFactory, this.mapper, this.reader) = (factory, mapper, reader);
 
-        public async Task Handle(CreateBookCommand request, CancellationToken cancellationToken)
+        public async Task<int?> Handle(CreateBookCommand request, CancellationToken cancellationToken)
         {
             var mappedRequest = this.mapper.Map<Publication>(request);
             using (var dbcontext = await this.dbcontextFactory.CreateDbContextAsync(cancellationToken))
@@ -56,6 +56,8 @@ namespace APMLibrary.Bll.Commands.BookCommands.Handler
 
                 await dbcontext.AddRangeAsync(mappedRequest);
                 await dbcontext.SaveChangesAsync(cancellationToken);
+
+                return mappedRequest.Id;
             }
         }
     }

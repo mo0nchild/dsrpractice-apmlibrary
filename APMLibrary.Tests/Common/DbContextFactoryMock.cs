@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static APMLibrary.Tests.DalTests.Common.DbContextInitializer;
+using static APMLibrary.Tests.Common.DbContextInitializer;
 
-namespace APMLibrary.Tests.DalTests.Common
+namespace APMLibrary.Tests.Common
 {
     public partial class DbContextFactoryMock : IDbContextFactory<LibraryDbContext>
     {
@@ -20,7 +20,7 @@ namespace APMLibrary.Tests.DalTests.Common
         public virtual LibraryDbContext CreateDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<LibraryDbContext>()
-               .UseInMemoryDatabase(DbContextFactoryMock.MemoryDbKey.ToString());
+               .UseInMemoryDatabase(MemoryDbKey.ToString());
 
             var contextConfig = Mock.Of<IOptionsMonitor<FileLoggerOptions>>(
                 item => item.CurrentValue == new FileLoggerOptions() { FilePath = "test.log" });

@@ -27,11 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DalTests\Requests\" />
-    <Folder Include="WebTests\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\APMLibrary.Bll\APMLibrary.Bll.csproj" />
     <ProjectReference Include="..\APMLibrary.Dal\APMLibrary.Dal.csproj" />
   </ItemGroup>

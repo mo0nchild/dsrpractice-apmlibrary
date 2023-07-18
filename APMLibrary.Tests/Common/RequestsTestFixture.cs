@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace APMLibrary.Tests.DalTests.Common
+namespace APMLibrary.Tests.Common
 {
     public partial class RequestsTestFixture : IDisposable
     {
@@ -17,7 +17,7 @@ namespace APMLibrary.Tests.DalTests.Common
 
         public RequestsTestFixture() : base()
         {
-            DbContextInitializer.Initialize(this.Factory = new DbContextFactoryMock()).Wait();
+            DbContextInitializer.Initialize(Factory = new DbContextFactoryMock()).Wait();
             var configurationProvider = new MapperConfiguration(config =>
             {
                 config.AddProfile(new AssemblyProfile(typeof(IMappingWith<>).Assembly));
@@ -26,7 +26,7 @@ namespace APMLibrary.Tests.DalTests.Common
         }
         public virtual async void Dispose()
         {
-            await DbContextInitializer.DestroyAsync(this.Factory);
+            await DbContextInitializer.DestroyAsync(Factory);
         }
     }
 

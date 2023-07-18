@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace APMLibrary.Bll.Commands.BookCommands
 {
-    public partial class CreateBookCommand : IRequest, IMappingWith<Publication>
+    public partial class CreateBookCommand : IRequest<int?>, IMappingWith<Publication>
     {
         public int PublisherId { get; set; } = default!;
         public string Title { get; set; } = default!;
